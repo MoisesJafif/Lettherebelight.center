@@ -8,7 +8,7 @@ function HomePage({ setRoute }) {
     <div data-screen-label="Home">
       {/* HERO */}
       <section className="relative min-h-screen flex items-center">
-        <HeroBackdrop />
+      
         <div className="relative z-10 max-w-[1440px] mx-auto px-6 sm:px-10 py-32 w-full">
           <Reveal>
             <Eyebrow>יהי אור · Yehi Ohr · Tzfat</Eyebrow>
