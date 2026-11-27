@@ -1,725 +1,490 @@
-// Additional pages: Music, Tours, Community, Teaching, Support, Vision, Contact, FAQ
+// Music · Tours · Community · Teaching · Support · Vision · Contact · FAQ · Merch
 
-function MusicPage({ setRoute }) {
+// ============== MUSIC ==============
+const SHELF = [
+  { key: 'ak', kind: 'yt', id: ADAM_KADMON.youtube, title: 'Adam Kadmon', sub: 'Avshi Weingot & Shlepping Nachas · 2023', cover: PHOTOS.cover.src },
+  { key: 'kz', kind: 'yt', id: 'fdRGgNKs1m8', title: 'Kumzitz and songs', sub: 'Rav Avshi in Mexico · 2023', cover: ytThumb('fdRGgNKs1m8') },
+  { key: 'sc', kind: 'yt', id: 'Ym4O7uRk8H8', title: 'Hillula of Reb Shlomo Carlebach', sub: 'Farbrengen · Nov 2025', cover: ytThumb('Ym4O7uRk8H8') },
+];
+
+function MusicPage() {
+  const [sel, setSel] = useState(0);
+  const cur = SHELF[sel];
   return (
-    <div data-screen-label="Music" className="pt-[72px]">
-      <section className="relative py-24 sm:py-32">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Music & Experience</Eyebrow>
-            <h1 className="font-display mt-6 text-[64px] sm:text-[120px] lg:text-[160px] leading-[0.9] tracking-[-0.025em]">
-              The <span className="font-display-i text-[var(--gold)]">niggun</span><br/>is a doorway.
-            </h1>
-            <p className="mt-10 max-w-xl text-[18px] leading-[1.6] text-[rgba(244,237,225,0.78)]">
-              Music here is not decoration. It is Chassidut — Torah taught through sound, breath, and the shared silence between notes.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* featured release */}
-      <section className="py-16 border-y border-[rgba(244,237,225,0.06)] ambient-amber">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-6">
-            <Reveal>
-              <Photo src="assets/adam-kadmon-cover.webp" alt="Adam Kadmon — album cover with Avshi Weingot and Shlepping Nachas" aspect="1/1" />
-            </Reveal>
-          </div>
-          <div className="lg:col-span-6">
-            <Reveal delay={150}>
-              <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-[var(--gold)]">Featured Release</div>
-              <h2 className="font-display mt-4 text-[56px] sm:text-[80px] leading-[0.95]">Adam Kadmon</h2>
-              <div className="mt-3 text-[14px] tracking-[0.18em] uppercase text-[rgba(244,237,225,0.55)]">Avshi Weingot × Shlepping Nachas</div>
-              <p className="mt-6 text-[16px] leading-[1.75] text-[rgba(244,237,225,0.7)] max-w-md">
-                The first man, the first light — a niggun that travels from before the world to the kitchen table on Friday night.
-              </p>
-              <div className="mt-8">
-                <MiniPlayer />
-              </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#" className="btn-ghost px-5 py-3 rounded-full text-[12px] tracking-[0.18em] uppercase">Spotify</a>
-                <a href="#" className="btn-ghost px-5 py-3 rounded-full text-[12px] tracking-[0.18em] uppercase">YouTube</a>
-                <a href="#" className="btn-ghost px-5 py-3 rounded-full text-[12px] tracking-[0.18em] uppercase">Apple Music</a>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* discography */}
-      <section className="py-28">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Discography</Eyebrow>
-            <h2 className="font-display mt-5 text-[40px] sm:text-[56px] leading-[1.05]">Recordings, nigunim, and live moments.</h2>
-          </Reveal>
-          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { t:'Adam Kadmon', m:'Single · 5786', tag:'Latest', cover:'assets/adam-kadmon-cover.webp' },
-              { t:'Kol Dodi', m:'Nigun · 5785', tag:'Live · Tzfat' },
-              { t:'Shir HaShirim', m:'Suite · 5785', tag:'Studio' },
-              { t:'Ohr HaGanuz', m:'Nigun · 5784', tag:'Live · Uman' },
-              { t:'Erev Shel Shoshanim', m:'Nigun · 5784', tag:'Reimagined' },
-              { t:'Hineni', m:'Single · 5784', tag:'Studio' },
-              { t:'Tzfat Shabbat Live', m:'Album · 5783', tag:'Live' },
-              { t:'Bilvavi', m:'Nigun · 5783', tag:'Studio' },
-            ].map(({t,m,tag,cover},i)=>(
-              <Reveal key={t} delay={i*40}>
-                <div className="group">
-                  <div className="relative">
-                    {cover
-                      ? <Photo src={cover} alt={`${t} — cover art`} aspect="1/1" />
-                      : <Placeholder label={`${t} — cover art`} aspect="1/1" />}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-14 h-14 rounded-full btn-primary flex items-center justify-center">
-                        <svg width="12" height="14" viewBox="0 0 14 16" fill="currentColor"><path d="M0 0v16l14-8z"/></svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--gold)]">{tag}</div>
-                    <div className="font-display text-[22px] mt-1">{t}</div>
-                    <div className="text-[12px] text-[rgba(244,237,225,0.5)]">{m}</div>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* live experiences */}
-      <section className="py-24 border-t border-[rgba(244,237,225,0.06)]">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid lg:grid-cols-2 gap-12 items-center">
-          <Reveal>
-            <Photo src="assets/campfire-night.webp" alt="Live niggun gathering around a campfire under stars" aspect="3/2" />
-          </Reveal>
-          <Reveal delay={150}>
-            <Eyebrow>Live & Experiential</Eyebrow>
-            <h2 className="font-display mt-5 text-[40px] sm:text-[56px] leading-[1.05] text-balance">Tish, niggun gatherings, and evenings of fire.</h2>
-            <p className="mt-5 text-[16px] leading-[1.75] text-[rgba(244,237,225,0.7)] max-w-md">
-              Sometimes a class is a song. Sometimes a song is a class. Live niggun evenings at Yehi Ohr and on tour are an invitation to drop the words and remember what the words are pointing toward.
-            </p>
-            <button onClick={() => setRoute('tours')} className="link-soft mt-8 inline-flex items-center gap-2 text-[13px] tracking-[0.18em] uppercase text-[var(--gold)]">
-              See upcoming live nights <span>→</span>
-            </button>
-          </Reveal>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function ToursPage({ setRoute }) {
-  return (
-    <div data-screen-label="Tours" className="pt-[72px]">
-      <section className="relative overflow-hidden border-b border-[rgba(244,237,225,0.06)]">
-        {/* full-bleed Tzfat sunset prayer backdrop */}
-        <div className="absolute inset-0 -z-0">
-          <img
-            src="assets/rav-praying-tzfat.webp"
-            alt="Rav Avshi in prayer overlooking Tzfat at sunset"
-            className="absolute inset-0 w-full h-full object-cover kenburns"
-            style={{ objectPosition: '70% 50%' }}
-            loading="eager"
-          />
-          {/* directional readability gradient — heavy on the left so the headline reads, soft on the right so Rav Avshi stays visible */}
-          <div className="absolute inset-0" style={{
-            background: 'linear-gradient(90deg, rgba(20,16,10,0.85) 0%, rgba(20,16,10,0.6) 35%, rgba(20,16,10,0.15) 60%, rgba(20,16,10,0.0) 80%)'
-          }} />
-          {/* warm gold blend so the sunset and the gold palette feel unified */}
-          <div className="absolute inset-0" style={{
-            background:
-              'radial-gradient(45% 40% at 12% 45%, rgba(232,166,87,0.22), transparent 65%),' +
-              'radial-gradient(40% 35% at 35% 80%, rgba(160,122,58,0.16), transparent 70%)',
-            mixBlendMode: 'screen'
-          }} />
-          {/* top + bottom scrim for nav + section transition */}
-          <div className="absolute inset-0" style={{
-            background: 'linear-gradient(180deg, rgba(20,16,10,0.45) 0%, rgba(20,16,10,0) 18%, rgba(20,16,10,0) 75%, rgba(20,16,10,0.92) 100%)'
-          }} />
-          {/* cinematic vignette */}
-          <div className="absolute inset-0" style={{
-            background: 'radial-gradient(130% 95% at 50% 50%, transparent 40%, rgba(20,16,10,0.55) 100%)'
-          }} />
-        </div>
-
-        <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 py-32 sm:py-44 lg:py-52 grid lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-7">
-            <Reveal>
-              <Eyebrow>Activities · Tours · Seminars</Eyebrow>
-              <h1 className="font-display mt-6 text-[60px] sm:text-[96px] lg:text-[128px] leading-[0.92] tracking-[-0.02em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.55)]">
-                Torah you walk,<br/><span className="font-display-i text-[var(--gold)]">sing, and live.</span>
-              </h1>
-              <p className="mt-10 max-w-xl text-[18px] leading-[1.65] text-[rgba(244,237,225,0.88)] drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
-                Immersive journeys with Rav Avshi — through Tzfat alleyways, Ukrainian holy sites, and the inner geography of your own soul.
-              </p>
-              <div className="mt-8 font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--gold)] flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-[var(--gold)] flicker" />
-                Tzfat · Uman · New York · Mexico
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* offerings */}
-      <section className="py-12">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 space-y-5">
-          {[
-            { tag:'International Tour', t:'Ukraine — Breslov & Holy Sites', d:'A seven-day pilgrimage through Uman, Mezhibuzh, and the places where Chassidut was born — taught and held with care.', meta:['7 days','Winter & Summer cycles','EN / HE'], img:'assets/rav-praying.webp', alt:'Rav Avshi in prayer outdoors', wa:{ topic:'tour', notes:'Shalom Rav Avshi, I’m interested in the Ukraine — Breslov & Holy Sites journey.' } },
-            { tag:'Seminar', t:'Godly Me · Inner Torah Intensive', d:'A three-day experiential program weaving Torah, reflection, niggun, and community. For people ready to go inside.', meta:['3 days','At Yehi Ohr · Tzfat','Small groups'], img:'assets/looking-clouds.webp', alt:'Students leaning on a railing, looking out at dramatic skies', wa:{ topic:'tour', notes:'Shalom Rav Avshi, I’m interested in the Godly Me Inner Torah Intensive.' } },
-            { tag:'Spiritual Tour', t:'Tzfat Spiritual Tour', d:'Tzfat as a living classroom — Ari mikveh, kabbalistic shuls, blue alleys, and the stories that still live in the stones.', meta:['1–5 days','Custom for groups','Year-round'], img:'assets/tzfat-alley.webp', alt:'Tzfat alley with blue doors and olive tree', wa:{ topic:'tour', notes:'Shalom Rav Avshi, I’m interested in booking a Tzfat Spiritual Tour.' } },
-            { tag:'Shabbat', t:'Shabbat of Light · Yehi Ohr', d:'A complete Shabbat — Kabbalat Shabbat, meals, learning, music, walks in Tzfat. The heart of everything we do.', meta:['Fri–Sat','Monthly','Open to all'], img:'assets/group-smiling.webp', alt:'Rav Avshi with students, laughing', wa:{ topic:'shabbat', notes:'Shalom Rav Avshi, I’m interested in joining the Shabbat of Light at Yehi Ohr.' } },
-          ].map((j,i) => (            <Reveal key={j.t} delay={i*80}>
-              <article className="event-card grid lg:grid-cols-12 gap-6 lg:gap-10 p-6 lg:p-8 rounded-sm border border-[rgba(244,237,225,0.1)] bg-[rgba(244,237,225,0.015)] hover:bg-[rgba(244,237,225,0.04)] transition-colors">
-                <div className="lg:col-span-5">
-                  <Photo src={j.img} alt={j.alt} aspect="3/2" />
-                </div>
-                <div className="lg:col-span-7 flex flex-col justify-between">
-                  <div>
-                    <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-[var(--gold)]">{j.tag}</div>
-                    <h3 className="font-display mt-3 text-[36px] sm:text-[44px] leading-[1.05]">{j.t}</h3>
-                    <p className="mt-4 text-[15px] leading-[1.75] text-[rgba(244,237,225,0.7)] max-w-xl">{j.d}</p>
-                  </div>
-                  <div className="mt-6 flex flex-wrap items-center gap-5">
-                    {j.meta.map(m => <span key={m} className="chip px-4 py-2 rounded-full text-[11px] tracking-[0.2em] uppercase">{m}</span>)}
-                    <button onClick={() => window.dispatchEvent(new CustomEvent('yo:open-wa', { detail: j.wa }))} className="ml-auto btn-primary px-5 py-3 rounded-full text-[11px] tracking-[0.2em] uppercase">Register →</button>
-                  </div>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* map suggestion */}
-      <section className="py-24 mt-12 border-y border-[rgba(244,237,225,0.06)] ambient-stone">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-5">
-            <Reveal>
-              <Eyebrow>The Routes</Eyebrow>
-              <h2 className="font-display mt-5 text-[40px] sm:text-[52px] leading-[1.05] text-balance">From Tzfat outward, in every direction.</h2>
-              <p className="mt-5 text-[15px] leading-[1.7] text-[rgba(244,237,225,0.65)] max-w-md">
-                Tzfat anchors the work. The world is the classroom — Ukraine, New York, Mexico, and wherever soul-family gathers.
-              </p>
-            </Reveal>
-          </div>
-          <div className="lg:col-span-7">
-            <Reveal delay={150}>
-              <Placeholder label="Stylized map — Tzfat as glowing center; thin gold lines arc to Uman, NYC, CDMX" note="Suggested: animated paths, slow draw-in" aspect="3/2" />
-            </Reveal>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function CommunityPage({ setRoute }) {
-  return (
-    <div data-screen-label="Community" className="pt-[72px]">
-      <section className="py-24 sm:py-32">
-        <div className="max-w-[1100px] mx-auto px-6 sm:px-10 text-center">
-          <Reveal>
-            <Eyebrow>Community</Eyebrow>
-            <h1 className="font-display mt-6 text-[60px] sm:text-[100px] leading-[0.95] tracking-[-0.02em]">
-              A circle of <span className="font-display-i text-[var(--gold)]">soul-family.</span>
-            </h1>
-            <p className="mt-8 text-[18px] leading-[1.7] text-[rgba(244,237,225,0.78)] max-w-2xl mx-auto">
-              In Tzfat, in cities across the world, and in the connection that stays after the journey ends.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* split — local vs global */}
-      <section className="py-12">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid md:grid-cols-2 gap-5">
-          {[
-            { t:'Local · Tzfat', d:'Weekly classes, Friday night davening at the Mekarev Shul, Shabbat meals at the family home, niggun evenings, daily learning at Shalom Rav. The rhythm of a place.', img:'assets/three-sitting.webp', alt:'Rav Avshi sitting with students on Tzfat steps' },
-            { t:'Global', d:'Tours and gatherings in Ukraine, New York, Mexico, and more. Online classes that reach laptops in twenty time zones. Connection beyond geography.', img:'assets/looking-clouds.webp', alt:'Students looking out together over a dramatic sky' },
-          ].map((p,i)=>(
-            <Reveal key={p.t} delay={i*100}>
-              <div className="rounded-sm overflow-hidden border border-[rgba(244,237,225,0.1)]">
-                <Photo src={p.img} alt={p.alt} aspect="4/3" />
-                <div className="p-8 bg-[rgba(244,237,225,0.02)]">
-                  <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-[var(--gold)]">0{i+1}</div>
-                  <h2 className="font-display mt-3 text-[34px] leading-[1.05]">{p.t}</h2>
-                  <p className="mt-4 text-[15px] leading-[1.75] text-[rgba(244,237,225,0.7)]">{p.d}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* gallery wall */}
-      <section className="py-28">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Moments</Eyebrow>
-            <h2 className="font-display mt-5 text-[40px] sm:text-[56px] leading-[1.05]">A gallery from the path.</h2>
-          </Reveal>
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { src:'assets/group-smiling.webp', a:'3/4', alt:'Rav Avshi with students, laughing' },
-              { src:'assets/campfire-night.webp', a:'1/1', alt:'Niggun around a campfire' },
-              { src:'assets/rav-praying.webp', a:'3/4', alt:'Rav Avshi in prayer' },
-              { src:'assets/jumping-mountains.webp', a:'1/1', alt:'Mid-leap in the hills' },
-              { src:'assets/looking-clouds.webp', a:'3/4', alt:'Students looking out at dramatic skies' },
-              { src:'assets/tzfat-sunset.webp', a:'1/1', alt:'Tzfat at golden hour' },
-              { src:'assets/three-sitting.webp', a:'3/4', alt:'Conversation on the stone steps' },
-              { src:'assets/rav-meditative.webp', a:'1/1', alt:'Rav Avshi in meditation' },
-              { src:'assets/tzfat-alley.webp', a:'3/4', alt:'Tzfat blue door alley' },
-              { src:'assets/learning-doorway.webp', a:'1/1', alt:'Learning at the table by the window' },
-              { src:'assets/students-walking.webp', a:'3/4', alt:'Students walking together' },
-              { src:'assets/prayer-mountains.webp', a:'1/1', alt:'Prayer in the mountains' },
-            ].map((it,i)=>(
-              <Reveal key={i} delay={i*40}>
-                <Photo src={it.src} alt={it.alt} aspect={it.a} />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function TeachingPage({ setRoute }) {
-  return (
-    <div data-screen-label="Teaching" className="pt-[72px]">
-      <section className="py-24 sm:py-32">
-        <div className="max-w-[1100px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Teaching & Path</Eyebrow>
-            <h1 className="font-display mt-6 text-[56px] sm:text-[96px] leading-[0.95] tracking-[-0.02em]">
-              Mind, heart, and <span className="font-display-i text-[var(--gold)]">lived experience.</span>
-            </h1>
-            <p className="mt-10 text-[19px] leading-[1.65] text-[rgba(244,237,225,0.78)] max-w-2xl">
-              Rav Avshi teaches Torah through Kabbalah, Chassidut, and music — never as information to be stored, always as light to be lived.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="py-16 border-t border-[rgba(244,237,225,0.06)]">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid md:grid-cols-3 gap-5">
-          {[
-            { n:'I.', t:'Mind', d:'Rigor in text — Zohar, Ramak, Ari, Chassidic masters. Sources held with both hands.' },
-            { n:'II.', t:'Heart', d:'Niggun, prayer, story, breath. Letting what the mind grasps reach the place that already knew.' },
-            { n:'III.', t:'Experience', d:'Shabbat, journey, community, silence. Torah as something walked, sung, and lived.' },
-          ].map((p,i)=>(
-            <Reveal key={p.t} delay={i*100}>
-              <div className="p-8 h-full rounded-sm border border-[rgba(244,237,225,0.1)] bg-[rgba(244,237,225,0.02)]">
-                <div className="font-display-i text-[var(--gold)] text-[40px] leading-none">{p.n}</div>
-                <h3 className="font-display mt-4 text-[32px]">{p.t}</h3>
-                <p className="mt-4 text-[15px] leading-[1.75] text-[rgba(244,237,225,0.7)]">{p.d}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* classes */}
-      <section className="py-28">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Classes</Eyebrow>
-            <h2 className="font-display mt-5 text-[40px] sm:text-[56px] leading-[1.05]">Weekly learning, in person & online.</h2>
-          </Reveal>
-          <div className="mt-12 grid md:grid-cols-2 gap-5">
-            {[
-              ['Zohar with Rav Avshi','Tuesdays 21:00 · Live + Zoom','EN / HE'],
-              ['Chassidut of the Ramak','Thursdays 20:00 · In person','HE'],
-              ['Inner Torah for Women','Wednesdays · Online','EN'],
-              ['Daf Yomi Niggun','Sunday mornings · Recorded','EN / HE'],
-            ].map(([t,w,l],i)=>(
-              <Reveal key={t} delay={i*60}>
-                <div className="event-card flex items-center justify-between gap-6 p-6 rounded-sm border border-[rgba(244,237,225,0.1)] bg-[rgba(244,237,225,0.015)]">
-                  <div>
-                    <h3 className="font-display text-[26px]">{t}</h3>
-                    <div className="mt-1 text-[13px] text-[rgba(244,237,225,0.6)]">{w}</div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="chip px-3 py-1.5 rounded-full text-[10px] tracking-[0.25em]">{l}</span>
-                    <button className="btn-ghost px-5 py-2.5 rounded-full text-[11px] tracking-[0.2em] uppercase">Join</button>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function SupportPage({ setRoute }) {
-  return (
-    <div data-screen-label="Support" className="pt-[72px]">
-      <section className="py-24 sm:py-32 ambient-amber">
-        <div className="max-w-[1100px] mx-auto px-6 sm:px-10 text-center">
-          <Reveal>
-            <Eyebrow>Build the Light</Eyebrow>
-            <h1 className="font-display mt-6 text-[60px] sm:text-[100px] leading-[0.95] tracking-[-0.02em]">
-              Help build the <span className="font-display-i text-[var(--gold)]">home of light.</span>
-            </h1>
-            <p className="mt-8 text-[18px] leading-[1.7] text-[rgba(244,237,225,0.8)] max-w-2xl mx-auto">
-              Yehi Ohr is a living spiritual movement — and its permanent home is being built together with friends, students, and supporters around the world. Every contribution helps transform the vision of Yehi Ohr into a real home for Torah, hospitality, music, prayer, and healing in Tzfat.
-            </p>
-            <div className="mt-6 font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--gold)] flex items-center justify-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-[var(--gold)] flicker" />
-              From dream to reality · built together
+    <div className="page">
+      <section className="section ink" style={{ paddingTop: 32 }}>
+        <div className="wrap split">
+          <Rv>
+            <img src={PHOTOS.cover.src} alt={PHOTOS.cover.alt} style={{ width: '100%', borderRadius: 6, aspectRatio: '1/1', objectFit: 'cover', boxShadow: '0 40px 80px -30px rgba(0,0,0,.8)' }} />
+          </Rv>
+          <div className="stack">
+            <div className="eyebrow">Music · featured release</div>
+            <h1 className="display" tabIndex="-1" data-page-title>Adam Kadmon <span className="he candle" lang="he" dir="rtl" style={{ fontSize: '.5em' }}>אדם קדמון</span></h1>
+            <p className="lede">{ADAM_KADMON.artists}. Released {ADAM_KADMON.released} · {ADAM_KADMON.length}.</p>
+            <div className="btn-row">
+              <a className="btn btn-candle" href="#listen" onClick={(e) => { e.preventDefault(); setSel(0); document.getElementById('listen')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' }); }}><Icon.play style={{ width: 14, height: 14 }} />Watch &amp; listen</a>
+              <a className="btn btn-line" href={'https://open.spotify.com/track/' + ADAM_KADMON.spotifyTrack} target="_blank" rel="noopener noreferrer"><Icon.sp />Spotify ↗</a>
             </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* donation card */}
-      <section className="py-16">
-        <div className="max-w-[1100px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <div className="rounded-sm border border-[rgba(244,237,225,0.12)] bg-[rgba(20,16,10,0.6)] p-8 sm:p-12">
-              <div className="mb-8">
-                <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-[var(--gold)]">Lay Another Stone</div>
-                <h2 className="font-display mt-2 text-[40px] sm:text-[52px] leading-[1.05]">Give once. Or every month.</h2>
-                <p className="mt-5 text-[16px] leading-[1.75] text-[rgba(244,237,225,0.72)] max-w-2xl">
-                  Choose any amount, as a monthly partnership or a one-time gift, on our donation page. You can dedicate your gift there too: in memory of a loved one, for healing, or in honor of a celebration.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary flex-1 text-center px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase font-medium">
-                  Help build the light →
-                </a>
-                <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-ghost text-center px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Sponsor a Shabbat</a>
-              </div>
-
-              <div className="mt-4 text-center text-[12px] text-[rgba(244,237,225,0.55)]">
-                You'll continue to our secure donation page to complete your gift.
-              </div>
-
-              <div className="mt-6 text-center font-mono text-[10px] tracking-[0.25em] uppercase text-[rgba(244,237,225,0.4)]">
-                Monthly or one-time · Secure card payments by Stripe
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* impact */}
-      <section className="py-28">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Become Part of the Foundation</Eyebrow>
-            <h2 className="font-display mt-5 text-[40px] sm:text-[56px] leading-[1.05]">What your gift becomes.</h2>
-          </Reveal>
-          <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              ['$18','sponsors candles for a Shabbat at Yehi Ohr.'],
-              ['$54','hosts one guest at a Shabbat meal — meal, song, soul.'],
-              ['$180','helps build a week of learning, prayer, and gathering.'],
-              ['$1,800','lays a meaningful stone in the foundation of the future center.'],
-            ].map(([a,d],i)=>(
-              <Reveal key={a} delay={i*80}>
-                <div className="p-7 h-full rounded-sm border border-[rgba(244,237,225,0.1)] bg-[rgba(244,237,225,0.02)]">
-                  <div className="font-display text-[44px] leading-none text-[var(--gold)]">{a}</div>
-                  <p className="mt-4 text-[15px] leading-[1.7] text-[rgba(244,237,225,0.75)]">{d}</p>
-                </div>
-              </Reveal>
-            ))}
+            <dl className="facts" style={{ paddingTop: 8 }}>
+              {ADAM_KADMON.credits.map(([k, v]) => <div className="fact" key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
+            </dl>
+            <p className="small">{ADAM_KADMON.locations}</p>
           </div>
         </div>
       </section>
 
-      {/* other ways */}
-      <section className="py-20 border-t border-[rgba(244,237,225,0.06)]">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid md:grid-cols-3 gap-5">
-          {[
-            ['Volunteer','Lend your skill — writing, design, hospitality, photography, languages — to the light.'],
-            ['Visit','Come to Tzfat. A Shabbat. A class. A coffee. Presence is also a kind of giving.'],
-            ['Spread the word','Share a class, a niggun, a tour with one person who needs it. That is everything.'],
-          ].map(([t,d],i)=>(
-            <Reveal key={t} delay={i*80}>
-              <div className="event-card p-7 rounded-sm border border-[rgba(244,237,225,0.1)] bg-[rgba(244,237,225,0.015)]">
-                <h3 className="font-display text-[28px]">{t}</h3>
-                <p className="mt-3 text-[14px] leading-[1.7] text-[rgba(244,237,225,0.65)]">{d}</p>
-                <button className="link-soft mt-5 text-[12px] tracking-[0.2em] uppercase text-[var(--gold)]">Begin →</button>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function VisionPage({ setRoute }) {
-  return (
-    <div data-screen-label="Vision" className="pt-[72px]">
-      {/* HERO */}
-      <section className="relative py-32 overflow-hidden">
-        <div className="absolute top-1/3 right-[8%] w-[420px] h-[420px] rounded-full pointer-events-none float-slow"
-             style={{ background: 'radial-gradient(circle, rgba(232,166,87,0.18), transparent 65%)' }} />
-        <div className="absolute bottom-[10%] left-[6%] w-[360px] h-[360px] rounded-full pointer-events-none float-slow"
-             style={{ background: 'radial-gradient(circle, rgba(202,164,92,0.14), transparent 60%)', animationDelay: '3s' }} />
-
-        <div className="relative max-w-[1100px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Vision</Eyebrow>
-            <h1 className="font-display mt-6 text-[64px] sm:text-[120px] leading-[0.92] tracking-[-0.025em]">
-              A dream actively <span className="font-display-i text-[var(--gold)]">being built.</span>
-            </h1>
-            <p className="mt-10 text-[20px] leading-[1.6] text-[rgba(244,237,225,0.82)] max-w-2xl">
-              A permanent home for inner Torah in Tzfat. A place where learning, music, prayer, and hospitality live under one roof — already alive in spirit, slowly rising in stone.
-            </p>
-            <div className="mt-8 font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--gold)] flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-[var(--gold)] flicker" />
-              From vision to reality · built together
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* The dream — image alongside text */}
-      <section className="py-20 border-t border-[rgba(244,237,225,0.06)]">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7">
-            <Photo src="assets/yehi-ohr-building.webp" alt="Yehi Ohr — exterior render" aspect="852/402" />
-          </div>
-          <div className="lg:col-span-5">
-            <Reveal>
-              <h2 className="font-display text-[36px] sm:text-[48px] leading-[1.05]">
-                A home <span className="font-display-i text-[var(--gold)]">slowly rising</span> beside an open door.
-              </h2>
-              <p className="mt-6 text-[16px] leading-[1.75] text-[rgba(244,237,225,0.72)]">
-                What began in a family living room is becoming a sanctuary in Jerusalem stone, wood, and glass. The community is already living — the building is the next chapter, and you are invited to help write it.
-              </p>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* What we're building */}
-      <section className="py-24">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>The Next Chapter</Eyebrow>
-            <h2 className="font-display mt-5 text-[40px] sm:text-[56px] leading-[1.05] max-w-3xl">
-              What we are building, <span className="font-display-i text-[var(--gold)]">together.</span>
-            </h2>
-          </Reveal>
-
-          <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
-              ['01','A larger beit midrash','Room for more talmidim, more chavrutot, more depth in the inner Torah of Tzfat.'],
-              ['02','A guesthouse','For travelers, soul-family, and seekers \u2014 a place to land, rest, and stay close to the learning.'],
-              ['03','Yehi Ohr Studio','Recording, translation, broadcast \u2014 carrying the light to twenty time zones in three languages.'],
-              ['04','Shabbat hospitality','Long tables under candlelight, expanding capacity to welcome more guests every week.'],
-              ['05','Music gatherings','A dedicated space for tish, niggun nights, and live recordings of inner Torah through song.'],
-              ['06','Gardens & quiet corners','Olive and pomegranate, stone walls, places for a slow breath and chavruta under sky.'],
-            ].map(([n,t,d],i)=>(
-              <Reveal key={n} delay={i*80}>
-                <div className="event-card p-8 h-full rounded-sm border border-[rgba(244,237,225,0.1)] bg-[rgba(244,237,225,0.02)]">
-                  <div className="font-display-i text-[var(--gold)] text-[44px] leading-none">{n}</div>
-                  <h3 className="font-display mt-4 text-[26px] leading-tight">{t}</h3>
-                  <p className="mt-3 text-[14px] leading-[1.7] text-[rgba(244,237,225,0.68)]">{d}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Already alive */}
-      <section className="py-24 border-y border-[rgba(244,237,225,0.06)] ambient-stone">
-        <div className="max-w-[1100px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Already Alive</Eyebrow>
-            <h2 className="font-display mt-5 text-[40px] sm:text-[56px] leading-[1.05]">
-              The community is <span className="font-display-i text-[var(--gold)]">already living.</span>
-            </h2>
-            <p className="mt-6 text-[17px] leading-[1.75] text-[rgba(244,237,225,0.72)] max-w-2xl">
-              Even as the walls are being built, the rhythm of Yehi Ohr is here: weekly classes, Friday-night davening, Shabbat tables, music nights, tours in Tzfat, journeys to Uman. The vision is not a someday \u2014 it is being lived now, with every Shabbat that arrives.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-28 ambient-amber">
-        <div className="max-w-[1100px] mx-auto px-6 sm:px-10 text-center">
-          <Reveal>
-            <Eyebrow>Build with Us</Eyebrow>
-            <h2 className="font-display mt-6 text-[48px] sm:text-[80px] leading-[1.0] text-balance">
-              Become part of the <span className="font-display-i text-[var(--gold)]">foundation.</span>
-            </h2>
-            <p className="mt-7 text-[17px] leading-[1.7] text-[rgba(244,237,225,0.75)] max-w-2xl mx-auto">
-              You are invited to help create something sacred \u2014 stone by stone, Shabbat by Shabbat. From dream to reality, together.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-3 justify-center">
-              <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Help Build the Light</a>
-              <button onClick={() => setRoute('community')} className="btn-ghost px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Visit Yehi Ohr</button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function ContactPage({ setRoute }) {
-  const [sent, setSent] = useState(false);
-  return (
-    <div data-screen-label="Contact" className="pt-[72px]">
-      <section className="py-24 sm:py-32">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 grid lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-5">
-            <Reveal>
-              <Eyebrow>Contact</Eyebrow>
-              <h1 className="font-display mt-6 text-[56px] sm:text-[88px] leading-[0.95]">
-                Write to <span className="font-display-i text-[var(--gold)]">us.</span>
-              </h1>
-              <p className="mt-6 text-[16px] leading-[1.7] text-[rgba(244,237,225,0.7)] max-w-md">
-                Visiting Tzfat. Booking a group. Asking a question of the heart. We read everything that arrives.
-              </p>
-              <div className="mt-10 space-y-4 font-mono text-[12px] tracking-[0.15em] uppercase text-[rgba(244,237,225,0.55)]">
-                <div><span className="text-[var(--gold)] mr-3">EMAIL</span> hello@lettherebelight.center</div>
-                <div><span className="text-[var(--gold)] mr-3">WHATSAPP</span> <a href="https://wa.me/+972545404914" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--gold)] transition-colors normal-case tracking-wider">+972 54 540 4914</a></div>
-                <div><span className="text-[var(--gold)] mr-3">ADDRESS</span> Old City · Tzfat · Israel</div>
-              </div>
-            </Reveal>
-          </div>
-          <div className="lg:col-span-7">
-            <Reveal delay={150}>
-              <form onSubmit={e=>{e.preventDefault(); setSent(true);}} className="p-8 sm:p-10 rounded-sm border border-[rgba(244,237,225,0.12)] bg-[rgba(20,16,10,0.6)]">
-                {sent ? (
-                  <div className="text-center py-16">
-                    <div className="font-display text-[36px]">Thank you.</div>
-                    <p className="mt-4 text-[15px] text-[rgba(244,237,225,0.7)]">Your message has been received. We will write back soon.</p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="grid sm:grid-cols-2 gap-5">
-                      <Field label="Your name" />
-                      <Field label="Email" type="email" />
-                    </div>
-                    <div className="mt-5">
-                      <Field label="What is your question about?" select options={['Visiting Tzfat','Booking a group','Tour or seminar','Donation','Press','Something else']} />
-                    </div>
-                    <div className="mt-5">
-                      <Field label="Tell us more" textarea />
-                    </div>
-                    <div className="mt-7 flex items-center justify-between flex-wrap gap-4">
-                      <label className="flex items-center gap-2 text-[12px] text-[rgba(244,237,225,0.55)] tracking-[0.1em] uppercase">
-                        <input type="checkbox" defaultChecked className="accent-[var(--gold)]"/> Add me to the newsletter
-                      </label>
-                      <button className="btn-primary px-7 py-3.5 rounded-full text-[12px] tracking-[0.18em] uppercase">Send Letter →</button>
-                    </div>
-                  </>
-                )}
-              </form>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function Field({ label, type='text', textarea, select, options }) {
-  return (
-    <label className="block">
-      <span className="block font-mono text-[10px] tracking-[0.25em] uppercase text-[rgba(244,237,225,0.5)] mb-2">{label}</span>
-      {textarea ? (
-        <textarea rows="5" className="w-full bg-transparent border-b border-[rgba(244,237,225,0.18)] focus:border-[var(--gold)] outline-none py-2 text-[16px] resize-none transition-colors" />
-      ) : select ? (
-        <select className="w-full bg-transparent border-b border-[rgba(244,237,225,0.18)] focus:border-[var(--gold)] outline-none py-2 text-[16px] transition-colors">
-          {options.map(o=><option key={o} className="bg-[#14100a]">{o}</option>)}
-        </select>
-      ) : (
-        <input type={type} className="w-full bg-transparent border-b border-[rgba(244,237,225,0.18)] focus:border-[var(--gold)] outline-none py-2 text-[16px] transition-colors" />
-      )}
-    </label>
-  );
-}
-
-function FAQPage({ setRoute }) {
-  const [open, setOpen] = useState(0);
-  const faqs = [
-    ['Who is this for?', 'For anyone — Jewish or not, observant or not, beginner or scholar — who feels drawn to inner Torah, music, and a more lived spiritual life.'],
-    ['Do I need prior knowledge?', 'No. Classes and experiences are designed to meet you where you are. We translate, we slow down, we make space.'],
-    ['What languages are offered?', 'English, Hebrew, and Spanish. Many classes are bilingual; tours can be booked in any of the three.'],
-    ['Can I learn online?', 'Yes. Weekly classes are live-streamed and recorded. Online community gatherings happen monthly.'],
-    ['Is travel to Tzfat involved?', 'For some programs, yes — Shabbatonim and seminars happen at Yehi Ohr. Tours and online classes are accessible from anywhere.'],
-    ['Is it suitable for families?', 'Yes. Children are welcome at most gatherings; some programs are adults-only by design. Ask us about your group.'],
-  ];
-  return (
-    <div data-screen-label="FAQ" className="pt-[72px]">
-      <section className="py-24 sm:py-32">
-        <div className="max-w-[1100px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>FAQ</Eyebrow>
-            <h1 className="font-display mt-6 text-[56px] sm:text-[88px] leading-[0.95]">Questions, gently answered.</h1>
-          </Reveal>
-          <div className="mt-14 divide-y divide-[rgba(244,237,225,0.08)] border-y border-[rgba(244,237,225,0.08)]">
-            {faqs.map(([q,a],i)=>(
-              <button key={q} onClick={()=>setOpen(open===i?-1:i)} className="block w-full text-left py-7">
-                <div className="flex items-center justify-between gap-6">
-                  <span className="font-display text-[26px] sm:text-[32px] leading-[1.15]">{q}</span>
-                  <span className={`font-display-i text-[var(--gold)] text-[36px] transition-transform ${open===i?'rotate-45':''}`}>+</span>
-                </div>
-                <div className={`overflow-hidden transition-all ${open===i?'max-h-40 mt-4':'max-h-0'}`}>
-                  <p className="text-[16px] leading-[1.75] text-[rgba(244,237,225,0.7)] max-w-2xl">{a}</p>
-                </div>
+      <section id="listen" className="section" aria-labelledby="shelf-title">
+        <div className="wrap">
+          <div className="eyebrow">Recordings</div>
+          <h2 id="shelf-title" className="h2" style={{ marginTop: 8 }}>Songs and niggunim with Rav Avshi</h2>
+          <div className="scroll-x" role="tablist" aria-label="Recordings" style={{ marginTop: 20 }}>
+            {SHELF.map((s, k) => (
+              <button key={s.key} role="tab" aria-selected={k === sel} onClick={() => setSel(k)}
+                style={{ width: 168, textAlign: 'left', opacity: k === sel ? 1 : .72, transition: 'opacity .3s' }}>
+                <img src={s.cover} alt="" loading="lazy" style={{ width: 168, height: 168, objectFit: 'cover', borderRadius: 6, outline: k === sel ? '3px solid var(--candle)' : 'none', outlineOffset: 2 }} />
+                <span className="class-title" style={{ display: 'block', fontSize: 18, marginTop: 10 }}>{s.title}</span>
+                <span className="class-meta" style={{ display: 'block' }}>{s.sub}</span>
               </button>
             ))}
           </div>
+          <div style={{ marginTop: 24, maxWidth: 860 }} role="tabpanel">
+            <YouTubePlayer key={cur.id} id={cur.id} title={cur.title} label={cur.title} />
+          </div>
+        </div>
+      </section>
+
+      <section className="section stone">
+        <div className="wrap split">
+          <figure>
+            <Photo p={PHOTOS.campfire} aspect="3/2" />
+            <figcaption>A niggun evening around the fire.</figcaption>
+          </figure>
+          <div className="stack">
+            <div className="eyebrow">Live &amp; experiential</div>
+            <h2 className="h2">Sometimes a class is a song.</h2>
+            <p>Sometimes a song is a class. Live niggun evenings are an invitation to drop the words and remember what the words are pointing toward.</p>
+            <div className="stack" style={{ '--stack': '10px' }}>
+              <p className="small">Every class is also a podcast:</p>
+              <SpotifyEmbed kind="show" id="2EoY2HZTKuBOnVxt2W7NgK" cta="Play the podcast" height={352} title="Rav Avshi Weingot podcast on Spotify" />
+            </div>
+          </div>
         </div>
       </section>
     </div>
   );
 }
 
-function MerchPage({ setRoute }) {
+// ============== TOURS & SEMINARS ==============
+const TOURS = [
+  { key: 'uman', tag: 'Journey', title: 'Ukraine — Breslov & holy sites',
+    img: ytThumb('W7BM9Qe_tjI'), imgAlt: 'Rav Avshi teaching in Uman (video still)', pos: '50% 40%',
+    facts: [['Duration', '7 days'], ['Language', 'English / Hebrew'], ['Group', 'Group journey']],
+    text: 'A pilgrimage through Uman, Mezhibuzh and the places where Chassidut was born — taught and held with care.',
+    proof: { label: 'Recorded on recent trips (Mar & Jul 2025)', href: ytPlaylist('PLgSQJNMuDV7C-z09LG_6KaWORiKP_aTqR') },
+    note: 'I’m interested in the Ukraine — Breslov & holy sites journey.' },
+  { key: 'tzfat', tag: 'Tour', title: 'Tzfat spiritual tour',
+    img: PHOTOS.alley.src, imgAlt: PHOTOS.alley.alt, pos: '50% 60%',
+    facts: [['Duration', '1–5 days'], ['Group', 'Private or group'], ['When', 'Year-round']],
+    text: 'Tzfat as a living classroom — the Ari’s mikveh, kabbalistic shuls, blue alleys, and the stories that still live in the stones.',
+    note: 'I’m interested in booking a Tzfat spiritual tour.' },
+  { key: 'godly', tag: 'Seminar', title: 'Godly Me · inner Torah intensive',
+    img: PHOTOS.clouds.src, imgAlt: PHOTOS.clouds.alt, pos: '50% 40%',
+    facts: [['Duration', '3 days'], ['Where', 'Tzfat'], ['Group', 'Small groups']],
+    text: 'An experiential program weaving Torah, reflection, niggun and community — for people ready to go inside.',
+    proof: { label: 'Interview: “Becoming Godly” (2023)', href: ytWatch('yeqLAai2njo') },
+    note: 'I’m interested in the Godly Me inner Torah intensive.' },
+  { key: 'shabbat', tag: 'Shabbat', title: 'Shabbat in Tzfat', topic: 'shabbat',
+    img: PHOTOS.group.src, imgAlt: PHOTOS.group.alt, pos: '55% 30%',
+    facts: [['Duration', 'Friday – Saturday'], ['Group', 'Open to all']],
+    text: 'Kabbalat Shabbat, meals at the family home, learning, music and walks in Tzfat.',
+    more: '#community', note: 'I’d like to join a Shabbat in Tzfat.' },
+];
+
+function ToursPage() {
   return (
-    <div data-screen-label="Merch" className="pt-[72px]">
-      <section className="py-24 sm:py-32">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
-          <Reveal>
-            <Eyebrow>Torah Through Design</Eyebrow>
-            <h1 className="font-display mt-6 text-[60px] sm:text-[100px] leading-[0.95]">
-              Wear the <span className="font-display-i text-[var(--gold)]">light.</span>
-            </h1>
-            <p className="mt-8 text-[18px] leading-[1.7] text-[rgba(244,237,225,0.78)] max-w-xl">
-              The Let There Be Light collection — clothing and objects carrying messages of Torah. Every piece supports the work of Yehi Ohr.
-            </p>
-          </Reveal>
-          <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
-              ['Yehi Ohr Tee','Stone · gold print','$48'],
-              ['Adam Kadmon Hoodie','Charcoal · oversized','$96'],
-              ['Tzfat Stone Mug','Hand-thrown','$32'],
-              ['Niggun Cassette','Limited · with download','$24'],
-              ['Light Print','Letterpress · 11×17','$45'],
-              ['Beit Midrash Tote','Natural canvas','$28'],
-            ].map(([t,m,p],i)=>(
-              <Reveal key={t} delay={i*60}>
-                <div className="event-card group">
-                  <Placeholder label={`${t} — product photo`} aspect="4/5" />
-                  <div className="mt-4 flex items-end justify-between">
-                    <div>
-                      <div className="font-display text-[22px]">{t}</div>
-                      <div className="text-[12px] text-[rgba(244,237,225,0.5)]">{m}</div>
+    <div className="page">
+      <Lead eyebrow="Tours & seminars" title="Torah you walk, sing and live.">
+        Journeys with Rav Avshi — through Tzfat, to the holy sites of Ukraine, and inward.
+      </Lead>
+      <section className="section-tight" style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <p className="note">Asking isn’t registering. Tap <strong>Ask about this</strong> to open WhatsApp with your question; the team replies to confirm dates, places and cost.</p>
+          <div className="stack" style={{ '--stack': '20px', marginTop: 24 }}>
+            {TOURS.map(t => (
+              <Rv as="article" key={t.key} className="card" style={{ padding: 0, overflow: 'hidden' }} aria-labelledby={'t-' + t.key}>
+                <div className="split" style={{ gap: 0, alignItems: 'stretch' }}>
+                  <div className="photo" style={{ aspectRatio: '16/10', borderRadius: 0 }}>
+                    <img src={t.img} alt={t.imgAlt} loading="lazy" decoding="async" style={{ objectPosition: t.pos }} />
+                  </div>
+                  <div style={{ padding: 20 }} className="stack">
+                    <div className="eyebrow">{t.tag}</div>
+                    <h2 id={'t-' + t.key} className="h3" style={{ fontSize: 28 }}>{t.title}</h2>
+                    <dl className="facts">{t.facts.map(([k, v]) => <div className="fact" key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+                    <p>{t.text}</p>
+                    {t.proof && <a className="text-link small" href={t.proof.href} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>{t.proof.label} ↗</a>}
+                    <div className="btn-row" style={{ paddingTop: 4 }}>
+                      <button className="btn btn-candle" onClick={() => openWA(t.topic || 'tour', 'Shalom Rav Avshi, ' + t.note)}><Icon.wa />Ask about this</button>
+                      {t.more && <a className="text-link" href={t.more}>Shabbat details →</a>}
                     </div>
-                    <div className="font-mono text-[13px] tracking-[0.1em] text-[var(--gold)]">{p}</div>
                   </div>
                 </div>
-              </Reveal>
+              </Rv>
             ))}
           </div>
+          <p className="small" style={{ marginTop: 24 }}>Rav Avshi also teaches abroad — see recordings from <a className="text-link" href={ytPlaylist('PLBbeogw73_P0')} target="_blank" rel="noopener noreferrer">Mexico 2026 ↗</a> and <a className="text-link" href={ytPlaylist('PLgSQJNMuDV7Bas5groRVaQH2_NK0VYAah')} target="_blank" rel="noopener noreferrer">Mexico 2025 ↗</a>.</p>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ============== COMMUNITY / SHABBAT ==============
+const NIGGUN_EVENING = [
+  { p: 'campfire', cap: 'Evening falls; students gather around the fire.' },
+  { p: 'fireMusic', cap: 'Rav Avshi takes up the guitar, and the niggun begins.' },
+  { p: 'laughing', cap: 'Walking home together through Tzfat.' },
+];
+
+function CommunityPage() {
+  return (
+    <div className="page">
+      <Opener photo={PHOTOS.group} position="55% 30%" eyebrow="Shabbat & community" title="Shabbat in Tzfat"
+        actions={<button className="btn btn-candle" onClick={() => openWA('shabbat')}><Icon.wa />Ask about Shabbat</button>}>
+        Kabbalat Shabbat at the Mekarev Shul, and Shabbat meals with Rav Avshi, Kiki and the family.
+      </Opener>
+
+      <section className="section-tight stone" aria-labelledby="shabbat-details">
+        <div className="wrap">
+          <h2 id="shabbat-details" className="eyebrow">Before you come</h2>
+          <dl className="grid-3" style={{ marginTop: 16 }}>
+            <div className="card"><dt className="h3">Friday night</dt><dd style={{ marginTop: 6 }}>Kabbalat Shabbat at the Mekarev Shul in Tzfat.</dd></div>
+            <div className="card"><dt className="h3">Meals</dt><dd style={{ marginTop: 6 }}>At the Weingot family home — an atmosphere of warmth and authenticity.</dd></div>
+            <div className="card"><dt className="h3">To arrange</dt><dd style={{ marginTop: 6 }}>Send your dates, group size and any dietary needs. The team confirms times and details with you.</dd></div>
+          </dl>
+          <p className="small" style={{ marginTop: 16 }}><a className="text-link" href="#faq/shabbat">Shabbat questions</a> · <a className="text-link" href="#yehi-ohr">Visiting Yehi Ohr</a></p>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="evening-title">
+        <div className="wrap">
+          <div className="eyebrow">A gathering</div>
+          <h2 id="evening-title" className="h2" style={{ marginTop: 8, maxWidth: '14em' }}>An evening of niggunim</h2>
+          <p className="lede" style={{ marginTop: 12 }}>Sometimes a class is a song. Sometimes a song is a class.</p>
+          <ol className="grid-3" style={{ marginTop: 28 }}>
+            {NIGGUN_EVENING.map((s, k) => (
+              <Rv as="li" key={s.p}>
+                <figure>
+                  <Photo p={PHOTOS[s.p]} aspect="4/5" />
+                  <figcaption><span className="eyebrow" style={{ marginInlineEnd: 8 }}>{k + 1}</span>{s.cap}</figcaption>
+                </figure>
+              </Rv>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="section ink">
+        <div className="wrap grid-2">
+          <div className="stack">
+            <div className="eyebrow">In Tzfat</div>
+            <p>Weekly classes, Friday night davening at the Mekarev Shul, Shabbat meals at the family home, niggun evenings and daily learning at Yeshiva Shalom Rav.</p>
+          </div>
+          <div className="stack">
+            <div className="eyebrow">Around the world</div>
+            <p>Journeys and gatherings in Ukraine, New York and Mexico, and classes online. Stay close through the WhatsApp community.</p>
+            <a className="text-link" href={LINKS.whatsappCommunity} target="_blank" rel="noopener noreferrer">Join the WhatsApp community ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <div className="action-bar"><button className="btn btn-candle btn-block" onClick={() => openWA('shabbat')}><Icon.wa />Ask about Shabbat</button></div>
+    </div>
+  );
+}
+
+// ============== TEACHING & PATH ==============
+const PATH_STEPS = [
+  { n: 'I', title: 'Mind', text: 'Rigour in text — the Zohar, the Ramak, the Ari and the Chassidic masters. Sources held with both hands.',
+    link: { label: 'Deeper explanation of the Amida', href: ytWatch(TEACHINGS.amida.id), ext: true }, more: { label: 'Parasha classes', href: ytPlaylist('PLgSQJNMuDV7B4jv44xSOtX-G6Z9v4_UYf') } },
+  { n: 'II', title: 'Heart', text: 'Niggun, prayer, story and breath — letting what the mind grasps reach the place that already knew.',
+    link: { label: 'Adam Kadmon', href: '#music' }, more: { label: 'Meditation class', href: ytWatch(TEACHINGS.meditation.id) } },
+  { n: 'III', title: 'Experience', text: 'Shabbat, journeys, community and silence. Torah as something walked, sung and lived.',
+    link: { label: 'Joy, from Uman', href: ytWatch(TEACHINGS.uman.id), ext: true }, more: { label: 'Shabbat in Tzfat', href: '#community' } },
+];
+
+function TeachingPage() {
+  const t = TEACHINGS.meditation;
+  return (
+    <div className="page">
+      <Lead eyebrow="Teaching & path" title="Mind, heart and lived experience.">
+        Rav Avshi teaches Torah through Kabbalah, Chassidut and music — never as information to be stored, always as light to be lived.
+      </Lead>
+      <section className="section-tight" style={{ paddingTop: 0 }}>
+        <div className="wrap split wide-left">
+          <YouTubePlayer id={t.id} title={t.title} sec={t.sec} date={t.date} label="Start here" />
+          <div className="stack">
+            <h2 className="h3" style={{ fontSize: 28 }}>The Inner Struggle Within Us</h2>
+            <p>A guided inner meditation on Yaakov and Esav — not just as historical figures, but as forces living within each of us. A good first class: no background needed.</p>
+          </div>
+        </div>
+      </section>
+      <section className="section stone">
+        <div className="wrap">
+          <h2 className="h2">Three ways in</h2>
+          <div className="grid-3" style={{ marginTop: 24 }}>
+            {PATH_STEPS.map(s => (
+              <Rv className="card stack" key={s.title} style={{ '--stack': '10px' }}>
+                <div className="h2 italic candle" style={{ fontSize: 34 }}>{s.n}.</div>
+                <h3 className="h3" style={{ fontSize: 28 }}>{s.title}</h3>
+                <p>{s.text}</p>
+                <a className="btn btn-ink" href={s.link.href} {...(s.link.ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})} style={{ alignSelf: 'flex-start' }}>
+                  {s.link.label} {s.link.ext ? '↗' : <Icon.arrow />}
+                </a>
+                <a className="text-link small" href={s.more.href} {...(s.more.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{s.more.label}{s.more.href.startsWith('http') ? ' ↗' : ' →'}</a>
+              </Rv>
+            ))}
+          </div>
+          <p style={{ marginTop: 28 }}><a className="text-link" href="#classes">All Torah classes →</a></p>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ============== SUPPORT ==============
+function SupportPage() {
+  return (
+    <div className="page">
+      <Lead eyebrow="Support" title="Help keep the light shining."
+        actions={<a className="btn btn-candle" href={DONATE_URL} target="_blank" rel="noopener noreferrer">Give on the donation page ↗</a>}>
+        Your gift helps Yehi Ohr welcome people to Tzfat and share the light of Chassidut and Kabbalah with Jewish souls around the world.
+      </Lead>
+
+      <section className="section-tight stone">
+        <div className="wrap grid-2">
+          <div className="stack">
+            <h2 className="h3" style={{ fontSize: 28 }}>What a gift supports</h2>
+            <ul className="stack" style={{ '--stack': '8px' }}>
+              <li>· Chassidut &amp; Kabbalah classes</li>
+              <li>· Torah &amp; meditation</li>
+              <li>· Shabbat experiences in Tzfat</li>
+              <li>· Teaching in Tzfat and worldwide</li>
+              <li>· Building a permanent home for Yehi Ohr</li>
+            </ul>
+            <a className="text-link small" href="#vision">What exists and what is planned →</a>
+          </div>
+          <div className="card stack" style={{ '--stack': '10px' }}>
+            <h2 className="h3">On the donation page you choose</h2>
+            <dl className="facts">
+              <div className="fact"><dt>Amount</dt><dd>$36 · $72 · $180 · $360 · $500 · $720 · $1,000 · or your own</dd></div>
+              <div className="fact"><dt>How often</dt><dd>Monthly or one-time</dd></div>
+              <div className="fact"><dt>Dedication</dt><dd>Optional — in memory, for healing, in honour…</dd></div>
+            </dl>
+            <p className="small">Monthly gifts renew until you cancel. Card payments are processed by Stripe on donaciones.yehiohr.live.</p>
+            <a className="btn btn-candle btn-block" href={DONATE_URL} target="_blank" rel="noopener noreferrer">Continue to give ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="h3" style={{ fontSize: 28 }}>Other ways to help</h2>
+          <div className="grid-3" style={{ marginTop: 16 }}>
+            <div className="card stack" style={{ '--stack': '8px' }}><h3 className="h3">Volunteer</h3><p>Writing, design, hospitality, photography, languages.</p><button className="text-link" style={{ alignSelf: 'flex-start', minHeight: 44 }} onClick={() => openWA('general', 'I’d like to volunteer with Yehi Ohr.')}>Offer your help</button></div>
+            <div className="card stack" style={{ '--stack': '8px' }}><h3 className="h3">Visit</h3><p>A Shabbat, a class, a coffee in Tzfat.</p><a className="text-link" href="#yehi-ohr">Plan a visit →</a></div>
+            <div className="card stack" style={{ '--stack': '8px' }}><h3 className="h3">Share a class</h3><p>Send one shiur to one person who needs it.</p><a className="text-link" href="#classes">Find a class →</a></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ============== VISION ==============
+function VisionPage() {
+  const latest = CLASSES[0];
+  return (
+    <div className="page">
+      <Lead eyebrow="Vision" title="A dream, actively being built.">
+        A permanent home for inner Torah in Tzfat — where learning, music, prayer and hospitality live under one roof. Already alive in spirit; slowly rising in stone.
+      </Lead>
+
+      <section className="section-tight" style={{ paddingTop: 0 }}>
+        <div className="wrap track">
+          <div className="track-col stack" style={{ '--stack': '10px' }}>
+            <span className="badge badge-doc" style={{ position: 'static', alignSelf: 'flex-start', width: 'fit-content' }}><span>Exists</span></span>
+            <h2 className="h3">Already happening</h2>
+            <ul className="stack small" style={{ '--stack': '8px', color: 'var(--umber)' }}>
+              <li><strong>Yeshiva Shalom Rav</strong>, led by Rav Avshi, with weekly classes and Shabbat in Tzfat.</li>
+              <li><strong>Classes online</strong> on YouTube and Spotify — newest {fmtDate(latest.date)}.</li>
+              <li><strong>Journeys to Uman</strong> — March and July 2025.</li>
+              <li><strong>Teaching in Mexico</strong> — 2023, 2025 and 2026.</li>
+            </ul>
+          </div>
+          <div className="track-col now stack" style={{ '--stack': '10px' }}>
+            <span className="badge badge-render" style={{ position: 'static', width: 'fit-content' }}><span>Underway</span></span>
+            <h2 className="h3">Making more space</h2>
+            <p className="small" style={{ color: 'var(--on-ink-soft)' }}>In March 2024 the community launched the <strong style={{ color: 'var(--on-ink)' }}>CLOSER</strong> campaign to make more space at Shalom Rav. The Yehi Ohr center is now being built beside the family home.</p>
+            <YouTubePlayer id={TEACHINGS.closer.id} title={TEACHINGS.closer.title} compact />
+            <p className="small" style={{ color: 'var(--on-ink-faint)' }}>“Help us build something CLOSER” · 2 min · Mar 2024</p>
+          </div>
+          <div className="track-col stack" style={{ '--stack': '10px' }}>
+            <span className="badge badge-plan" style={{ position: 'static', width: 'fit-content' }}><span>Hoped for</span></span>
+            <h2 className="h3">What we hope to build</h2>
+            <ul className="stack small" style={{ '--stack': '8px', color: 'var(--umber)' }}>
+              <li>A larger beit midrash</li>
+              <li>A guesthouse for travellers and seekers</li>
+              <li>The Yehi Ohr studio for recording and translation</li>
+              <li>Room for more guests at Shabbat</li>
+              <li>A space for niggun evenings</li>
+              <li>Gardens and quiet corners</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-tight">
+        <div className="wrap">
+          <figure>
+            <Photo p={PHOTOS.centerRender} aspect="1800/850" />
+            <figcaption>The planned Yehi Ohr center — architectural render, not a photograph.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section ink">
+        <div className="wrap btn-row" style={{ justifyContent: 'space-between' }}>
+          <div className="stack" style={{ '--stack': '8px', maxWidth: '30em' }}>
+            <h2 className="h2">Become part of the foundation.</h2>
+            <p>Stone by stone, Shabbat by Shabbat — from dream to reality, together.</p>
+          </div>
+          <a className="btn btn-candle" href="#support">Support Yehi Ohr <Icon.arrow /></a>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ============== CONTACT (and #newsletter) ==============
+function ContactPage() {
+  return (
+    <div className="page">
+      <Lead eyebrow="Contact" title="Write to the team on WhatsApp."
+        actions={<>
+          <button className="btn btn-candle" onClick={() => openWA('general')}><Icon.wa />Start a message</button>
+          <a className="text-link" href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer">{LINKS.whatsappNumber} ↗</a>
+        </>}>
+        Visiting Tzfat, booking a group, or a question of the heart. WhatsApp is the fastest way to reach Rav Avshi’s team.
+      </Lead>
+
+      <section className="section-tight stone">
+        <div className="wrap grid-2">
+          <div className="card stack" style={{ '--stack': '8px' }}>
+            <h2 className="h3">How it works</h2>
+            <p>The form helps you write a clear message. Nothing is sent until you press send in WhatsApp.</p>
+            <p className="small">Prefer to type it yourself? <a className="text-link" href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer">Open WhatsApp directly ↗</a></p>
+          </div>
+          <div className="card stack" style={{ '--stack': '8px' }}>
+            <h2 className="h3">Where</h2>
+            <p>Old City, Tzfat, Israel. Directions are shared on WhatsApp when you arrange a visit.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="updates" className="section" aria-labelledby="updates-title">
+        <div className="wrap-narrow stack">
+          <div className="eyebrow">Updates</div>
+          <h2 id="updates-title" className="h2">A newsletter isn’t available yet.</h2>
+          <p>Until it is, the best way to hear about new classes and gatherings is the WhatsApp community, or following the podcast.</p>
+          <div className="btn-row">
+            <a className="btn btn-ink" href={LINKS.whatsappCommunity} target="_blank" rel="noopener noreferrer"><Icon.wa />Join the WhatsApp community ↗</a>
+            <a className="btn btn-line" href={LINKS.spotifyShow} target="_blank" rel="noopener noreferrer"><Icon.sp />Follow on Spotify ↗</a>
+            <a className="btn btn-line" href={LINKS.youtube} target="_blank" rel="noopener noreferrer"><Icon.yt />Subscribe on YouTube ↗</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ============== FAQ ==============
+const FAQ_GROUPS = [
+  { id: 'visiting', title: 'Visiting', items: [
+    { q: 'Who is this for?', a: 'Anyone drawn to inner Torah, music and a more lived spiritual life — beginner or scholar.', act: { label: 'Ask about visiting', topic: 'visit' } },
+    { q: 'Do I need prior knowledge?', a: 'No. Classes and experiences are designed to meet you where you are.', act: { label: 'Try a first class', href: '#teaching' } },
+    { q: 'Is it suitable for families?', a: 'Children are welcome at many gatherings; some programs are for adults. Ask the team about your group.', act: { label: 'Ask about your group', topic: 'visit' } },
+    { q: 'Where is Yehi Ohr?', a: 'In the Old City of Tzfat, Israel. Exact directions are sent on WhatsApp when you arrange a visit.', act: { label: 'Visiting Yehi Ohr', href: '#yehi-ohr' } },
+  ]},
+  { id: 'shabbat', title: 'Shabbat', items: [
+    { q: 'Can I join a Shabbat in Tzfat?', a: 'Yes — Kabbalat Shabbat at the Mekarev Shul and meals at the Weingot family home. Send your dates and group size; the team confirms with you.', act: { label: 'Ask about Shabbat', topic: 'shabbat' } },
+    { q: 'Can you help with meals or a place to stay?', a: 'Say what you need in your Shabbat message — meals, a place to sleep, or both — and the team will tell you what is possible.', act: { label: 'Ask about Shabbat', topic: 'shabbat' } },
+  ]},
+  { id: 'online', title: 'Learning online', items: [
+    { q: 'Can I learn online?', a: 'Yes. Classes are posted on YouTube and as a podcast on Spotify.', act: { label: 'Torah classes', href: '#classes' } },
+    { q: 'Do I have to travel to Tzfat?', a: 'Shabbat, seminars and tours happen in person. Classes online are open from anywhere.', act: { label: 'Tours & seminars', href: '#tours' } },
+  ]},
+  { id: 'languages', title: 'Languages', items: [
+    { q: 'What languages are offered?', a: 'Recorded classes are mostly in English. You can write to the team in English, Hebrew or Spanish.', act: { label: 'Write to the team', topic: 'general' } },
+  ]},
+];
+
+function FAQPage({ sub }) {
+  const firstOpen = sub && FAQ_GROUPS.find(g => g.id === sub) ? sub + ':0' : 'visiting:0';
+  const [open, setOpen] = useState(firstOpen);
+  useEffect(() => { if (sub) setOpen(sub + ':0'); }, [sub]);
+  return (
+    <div className="page">
+      <Lead eyebrow="Practical questions" title="Before you come.">
+        <span className="btn-row" style={{ gap: 8 }}>
+          {FAQ_GROUPS.map(g => <a key={g.id} className="chip" href={'#faq/' + g.id}>{g.title}</a>)}
+        </span>
+      </Lead>
+      <section className="section-tight" style={{ paddingTop: 0 }}>
+        <div className="wrap-narrow">
+          {FAQ_GROUPS.map(g => (
+            <div key={g.id} id={g.id} style={{ marginBottom: 36 }}>
+              <h2 className="eyebrow" style={{ marginBottom: 8 }}>{g.title}</h2>
+              <div className="acc">
+                {g.items.map((it, k) => {
+                  const key = g.id + ':' + k; const isOpen = open === key;
+                  return (
+                    <div className="acc-item" key={key}>
+                      <h3 style={{ margin: 0 }}>
+                        <button className="acc-q" aria-expanded={isOpen} aria-controls={'a-' + key} id={'q-' + key} onClick={() => setOpen(isOpen ? '' : key)}>
+                          {it.q}<span className="plus" aria-hidden="true" />
+                        </button>
+                      </h3>
+                      <div className="acc-a" id={'a-' + key} role="region" aria-labelledby={'q-' + key} hidden={!isOpen}>
+                        <p>{it.a}</p>
+                        <p style={{ marginTop: 12 }}>
+                          {it.act.topic
+                            ? <button className="btn btn-ink" onClick={() => openWA(it.act.topic)}><Icon.wa />{it.act.label}</button>
+                            : <a className="btn btn-line" href={it.act.href}>{it.act.label} <Icon.arrow /></a>}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ============== MERCH ==============
+function MerchPage() {
+  return (
+    <div className="page">
+      <Lead eyebrow="Merch" title="The Let There Be Light collection."
+        actions={<button className="btn btn-candle" onClick={() => openWA('general', 'Please let me know when the Let There Be Light collection is available.')}><Icon.wa />Tell me when it opens</button>}>
+        Clothing and objects carrying messages of Torah, supporting the work of Yehi Ohr. The collection isn’t available to order yet, so no items or prices are listed here.
+      </Lead>
+      <section className="section-tight" style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <p className="small">In the meantime: <a className="text-link" href="#support">support Yehi Ohr directly →</a></p>
         </div>
       </section>
     </div>

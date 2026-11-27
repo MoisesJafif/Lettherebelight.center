@@ -17,7 +17,7 @@ const WA_L10N = {
     bestTime: 'Best time to contact you', anyTime: 'Any time',
     preferredLang: 'Preferred follow-up language', notes: 'Anything else?',
     placeholder: 'Shalom Rav Avshi, I\u2019d like to get in touch\u2026',
-    send: 'Send on WhatsApp', skip: 'Open WhatsApp without form', help: 'Need help? Email hello@lettherebelight.center',
+    send: 'Continue in WhatsApp', skip: 'Open WhatsApp without form', help: 'Nothing is sent until you press send in WhatsApp.',
     errEmpty: 'Please add your name or a short note first.',
     opening: 'Opening WhatsApp\u2026', sentFrom: 'Sent from the Yehi Ohr website.',
     greet: (name) => 'Shalom Rav Avshi' + (name ? ', my name is ' + name : '') + '.',
@@ -64,7 +64,7 @@ const WA_L10N = {
     bestTime: '\u05d6\u05de\u05df \u05de\u05d5\u05e2\u05d3\u05e3 \u05dc\u05e2\u05d3\u05db\u05d5\u05df', anyTime: '\u05db\u05dc \u05d6\u05de\u05df',
     preferredLang: '\u05e9\u05e4\u05d4 \u05de\u05d5\u05e2\u05d3\u05e4\u05ea', notes: '\u05de\u05e9\u05d4\u05d5 \u05e0\u05d5\u05e1\u05e3?',
     placeholder: '\u05e9\u05dc\u05d5\u05dd \u05d4\u05e8\u05d1 \u05d0\u05d1\u05e9\u05d9, \u05d4\u05d9\u05d9\u05ea\u05d9 \u05e8\u05d5\u05e6\u05d4...',
-    send: '\u05e9\u05dc\u05d7 \u05d1\u05d5\u05d5\u05d0\u05d8\u05e1\u05d0\u05e4', skip: '\u05e4\u05ea\u05d7 \u05d5\u05d5\u05d0\u05d8\u05e1\u05d0\u05e4 \u05dc\u05dc\u05d0 \u05d8\u05d5\u05e4\u05e1', help: '\u05e6\u05e8\u05d9\u05db\u05d9\u05dd \u05e2\u05d6\u05e8\u05d4? hello@lettherebelight.center',
+    send: '\u05d4\u05de\u05e9\u05da \u05d1\u05d5\u05d5\u05d0\u05d8\u05e1\u05d0\u05e4', skip: '\u05e4\u05ea\u05d7 \u05d5\u05d5\u05d0\u05d8\u05e1\u05d0\u05e4 \u05dc\u05dc\u05d0 \u05d8\u05d5\u05e4\u05e1', help: '\u05e9\u05d5\u05dd \u05d3\u05d1\u05e8 \u05dc\u05d0 \u05e0\u05e9\u05dc\u05d7 \u05e2\u05d3 \u05e9\u05ea\u05dc\u05d7\u05e6\u05d5 \u05e9\u05dc\u05d7 \u05d1\u05d5\u05d5\u05d0\u05d8\u05e1\u05d0\u05e4.',
     errEmpty: '\u05e0\u05d0 \u05dc\u05de\u05dc\u05d0 \u05e9\u05dd \u05d0\u05d5 \u05dc\u05db\u05ea\u05d5\u05d1 \u05d4\u05e2\u05e8\u05d4 \u05e7\u05e6\u05e8\u05d4.',
     opening: '\u05e4\u05d5\u05ea\u05d7 \u05d5\u05d5\u05d0\u05d8\u05e1\u05d0\u05e4...', sentFrom: '\u05e0\u05e9\u05dc\u05d7 \u05de\u05d0\u05ea\u05e8 \u05d9\u05d4\u05d9 \u05d0\u05d5\u05e8.',
     greet: (name) => '\u05e9\u05dc\u05d5\u05dd \u05d4\u05e8\u05d1 \u05d0\u05d1\u05e9\u05d9' + (name ? ', \u05e9\u05de\u05d9 ' + name : '') + '.',
@@ -111,7 +111,7 @@ const WA_L10N = {
     bestTime: 'Mejor horario de contacto', anyTime: 'Cualquier hora',
     preferredLang: 'Idioma preferido para responder', notes: '\u00bfAlgo m\u00e1s?',
     placeholder: 'Shalom Rav Avshi, me gustar\u00eda escribir\u2026',
-    send: 'Enviar por WhatsApp', skip: 'Abrir WhatsApp sin formulario', help: '\u00bfNecesitas ayuda? hello@lettherebelight.center',
+    send: 'Continuar en WhatsApp', skip: 'Abrir WhatsApp sin formulario', help: 'Nada se env\u00eda hasta que presiones enviar en WhatsApp.',
     errEmpty: 'Por favor agrega tu nombre o un breve mensaje.',
     opening: 'Abriendo WhatsApp\u2026', sentFrom: 'Enviado desde el sitio de Yehi Ohr.',
     greet: (name) => 'Shalom Rav Avshi' + (name ? ', mi nombre es ' + name : '') + '.',
@@ -226,7 +226,7 @@ function WAField({ field, value, onChange, isRTL }) {
           type={field.type === 'date' ? 'date' : 'text'}
           value={value || ''} onChange={e => set(e.target.value)}
           placeholder={field.placeholder || ''}
-          className="w-full bg-[rgba(244,237,225,0.04)] border border-[rgba(244,237,225,0.12)] focus:border-[var(--gold)] outline-none rounded-sm px-3 py-2 text-[13px] text-[var(--parchment)] placeholder:text-[rgba(244,237,225,0.3)] transition-colors"
+          className="w-full bg-[rgba(244,237,225,0.04)] border border-[rgba(244,237,225,0.12)] focus:border-[var(--gold)] outline-none rounded-sm px-3 py-2 text-[16px] text-[var(--parchment)] placeholder:text-[rgba(244,237,225,0.3)] transition-colors"
         />
       </label>
     );
@@ -237,7 +237,7 @@ function WAField({ field, value, onChange, isRTL }) {
         <span className="block font-mono text-[9px] tracking-[0.25em] uppercase text-[rgba(244,237,225,0.5)] mb-1.5">{field.label}</span>
         <div className="relative">
           <select value={value || ''} onChange={e => set(e.target.value)}
-            className={`w-full appearance-none bg-[rgba(244,237,225,0.04)] border border-[rgba(244,237,225,0.12)] focus:border-[var(--gold)] outline-none rounded-sm px-3 py-2 text-[13px] text-[var(--parchment)] transition-colors cursor-pointer ${isRTL ? 'pl-8' : 'pr-8'}`}>
+            className={`w-full appearance-none bg-[rgba(244,237,225,0.04)] border border-[rgba(244,237,225,0.12)] focus:border-[var(--gold)] outline-none rounded-sm px-3 py-2 text-[16px] text-[var(--parchment)] transition-colors cursor-pointer ${isRTL ? 'pl-8' : 'pr-8'}`}>
             <option value="" className="bg-[#1f1810]">—</option>
             {field.options.map(o => <option key={o} value={o} className="bg-[#1f1810]">{o}</option>)}
           </select>
@@ -322,8 +322,8 @@ function WhatsAppFloat() {
     const onKey = e => { if (e.key === 'Escape') setOpen(false); };
     const onClick = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     window.addEventListener('keydown', onKey);
-    setTimeout(() => window.addEventListener('mousedown', onClick), 0);
-    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('mousedown', onClick); };
+    setTimeout(() => { window.addEventListener('mousedown', onClick); window.addEventListener('touchstart', onClick, { passive: true }); }, 0);
+    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('mousedown', onClick); window.removeEventListener('touchstart', onClick); };
   }, [open]);
 
   // Auto-resize notes textarea
@@ -352,11 +352,14 @@ function WhatsAppFloat() {
   const schema = getSchema(state.topic, t);
 
   return (
-    <div ref={ref} className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div ref={ref} role="dialog" aria-modal="false" aria-label={t.title} aria-hidden={!open}
+      className={`fixed z-[60] left-2 right-2 sm:left-auto sm:right-6 flex flex-col items-end gap-3 ${open ? '' : 'pointer-events-none'}`}
+      style={{ bottom: 'calc(8px + env(safe-area-inset-bottom))', visibility: open ? 'visible' : 'hidden', transition: open ? 'none' : 'visibility 0s linear .3s' }}
+      dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Popup panel */}
       <div
         className={`origin-bottom-right transition-all duration-300 ${open ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 translate-y-2 pointer-events-none'}`}
-        style={{ width: 'min(400px, calc(100vw - 32px))' }}
+        style={{ width: 'min(420px, calc(100vw - 16px))' }}
       >
         <div className="rounded-sm border border-[rgba(244,237,225,0.12)] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.55),0_0_50px_rgba(232,166,87,0.08)]"
              style={{ background: 'linear-gradient(180deg, rgba(31,24,16,0.96), rgba(20,16,10,0.96))', backdropFilter: 'blur(14px)' }}>
@@ -385,7 +388,7 @@ function WhatsAppFloat() {
           </div>
 
           {/* Scrollable body */}
-          <div className="max-h-[60vh] overflow-y-auto">
+          <div className="max-h-[56svh] overflow-y-auto overscroll-contain">
             {/* Name + Topic */}
             <div className="px-5 pt-4 space-y-3">
               <WAField field={{ key:'name', type:'text', label: t.name, placeholder: t.name }} value={state.name} onChange={onChange} isRTL={isRTL} />
@@ -426,7 +429,7 @@ function WhatsAppFloat() {
                 onChange={e => onChange('notes', e.target.value)}
                 rows={2}
                 placeholder={t.placeholder}
-                className={`w-full bg-[rgba(244,237,225,0.04)] border ${err ? 'border-red-400/60' : 'border-[rgba(244,237,225,0.12)] focus:border-[var(--gold)]'} outline-none rounded-sm px-3 py-2.5 text-[13px] leading-relaxed resize-none text-[var(--parchment)] placeholder:text-[rgba(244,237,225,0.35)] transition-colors overflow-hidden`}
+                className={`w-full bg-[rgba(244,237,225,0.04)] border ${err ? 'border-red-400/60' : 'border-[rgba(244,237,225,0.12)] focus:border-[var(--gold)]'} outline-none rounded-sm px-3 py-2.5 text-[16px] leading-relaxed resize-none text-[var(--parchment)] placeholder:text-[rgba(244,237,225,0.35)] transition-colors overflow-hidden`}
                 style={{ minHeight: '60px' }}
               />
               {err && <div className="mt-2 text-[12px] text-red-400/90">{err}</div>}
@@ -458,19 +461,6 @@ function WhatsAppFloat() {
         </div>
       </div>
 
-      {/* Floating trigger */}
-      <button onClick={() => setOpen(o => !o)} aria-label="Open WhatsApp chat"
-        className="relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105"
-        style={{
-          background: 'linear-gradient(180deg, rgba(232,166,87,0.95), rgba(160,122,58,0.95))',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.55), 0 0 30px rgba(232,166,87,0.35)'
-        }}>
-        <span className="absolute inset-0 rounded-full opacity-60" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3)' }} />
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-[#1a120b] relative">
-          <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .1-3.3-.7-2.7-1-4.4-3.8-4.5-3.9-.1-.2-1-1.4-1-2.7s.7-1.9.9-2.2c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.7.8 1.8s.1.3 0 .5c-.1.2-.2.3-.4.5-.1.1-.3.3-.4.4-.1.1-.3.3-.1.5.1.3.7 1.1 1.5 1.8 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.4.7 1.6.8.2.1.4.2.4.3.1.1.1.7-.1 1.3z"/>
-        </svg>
-        {!open && <span className="absolute inset-0 rounded-full border border-[rgba(232,166,87,0.6)] animate-[pulse_2.4s_ease-out_infinite]" />}
-      </button>
     </div>
   );
 }
