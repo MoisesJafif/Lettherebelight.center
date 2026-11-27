@@ -493,3 +493,29 @@ figure figcaption { margin-top: 10px; font-size: 14px; line-height: 1.45; color:
 .pstack-card.contain img { object-fit: contain; background: var(--ink); }
 .action-bar { transition: transform .3s var(--ease), opacity .3s; }
 .action-bar.away { transform: translateY(110%); opacity: 0; pointer-events: none; }
+
+/* ---------- header donate button ("Be the Light") ---------- */
+.donate-btn {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  height: 44px; padding: 0 16px; border-radius: 999px;
+  background: var(--candle); color: var(--ink); font-size: 15px; font-weight: 600; white-space: nowrap;
+  box-shadow: 0 6px 24px -10px rgba(234, 168, 80, .8);
+  transition: background .25s;
+}
+.donate-btn:hover { background: var(--candle-2); }
+.donate-short { display: none; }
+/* Phones: keep logo, WhatsApp, Be the Light and Menu on one line. */
+@media (max-width: 479px) {
+  .header-row { gap: 6px; }
+  .brand { gap: 8px; }
+  .brand-he { display: none; }
+  .brand-name { font-size: 21px; }
+  .donate-btn { padding: 0 14px; }
+  .menu-btn { padding: 0 12px; }
+  .menu-label { display: none; }
+  .menu-btn .bars { width: 20px; }
+}
+@media (max-width: 374px) {
+  .donate-long { display: none; }
+  .donate-short { display: inline; }
+}

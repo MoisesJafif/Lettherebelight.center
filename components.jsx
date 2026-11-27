@@ -144,8 +144,11 @@ function Header({ route }) {
           <a href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer" className="icon-btn wa" aria-label="WhatsApp Rav Avshi's team">
             <Icon.wa /><span className="wa-label">WhatsApp</span>
           </a>
-          <button ref={btnRef} className="icon-btn menu-btn" aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(o => !o)}>
-            <span className="bars" aria-hidden="true" /><span>{open ? 'Close' : 'Menu'}</span>
+          <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="donate-btn" aria-label="Be the Light — donate to Yehi Ohr (opens the donation page)">
+            <span className="donate-long">Be the Light</span><span className="donate-short" aria-hidden="true">Donate</span>
+          </a>
+          <button ref={btnRef} className="icon-btn menu-btn" aria-label={open ? "Close menu" : "Menu"} aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(o => !o)}>
+            <span className="bars" aria-hidden="true" /><span className="menu-label">{open ? 'Close' : 'Menu'}</span>
           </button>
         </div>
       </header>
@@ -166,7 +169,7 @@ function Header({ route }) {
         </nav>
         <div className="sheet-foot">
           <a href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-candle btn-block" tabIndex={open ? 0 : -1}><Icon.wa />WhatsApp {LINKS.whatsappNumber}</a>
-          <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-line btn-block" style={{ borderColor: 'rgba(246,239,227,.4)', color: 'var(--on-ink)' }} tabIndex={open ? 0 : -1}>Give to Yehi Ohr ↗</a>
+          <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-line btn-block" style={{ borderColor: 'rgba(246,239,227,.4)', color: 'var(--on-ink)' }} tabIndex={open ? 0 : -1}>Be the Light — donate ↗</a>
         </div>
       </div>
     </>
