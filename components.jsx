@@ -1,5 +1,8 @@
 const { useState, useEffect, useRef, useMemo } = React;
 
+// Donation page (Steady Connection, card payments by Stripe). Every donate button links here.
+const DONATE_URL = 'https://donaciones.yehiohr.live/#donate';
+
 // ---------- Standalone resource resolver (unused in main build, kept for offline export) ----------
 function R(path) {
   if (typeof path !== 'string') return path;
@@ -179,7 +182,7 @@ function Nav({ route, setRoute, lang, setLang }) {
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--olive)] flicker" />
             WhatsApp
           </a>
-          <a href="https://www.paypal.com/paypalme/avshiweingot" target="_blank" rel="noopener noreferrer" className="btn-primary text-[12px] tracking-[0.14em] uppercase px-5 py-2.5 rounded-full font-medium">
+          <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary text-[12px] tracking-[0.14em] uppercase px-5 py-2.5 rounded-full font-medium">
             Be the Light
           </a>
           <button onClick={() => setOpen(o => !o)} className="lg:hidden ml-1 p-2 text-[rgba(244,237,225,0.8)]">
@@ -248,15 +251,15 @@ function Footer({ setRoute, lang, setLang }) {
           {[
             ['Explore', [['Rav Avshi','rav-avshi'],['Teaching & Path','teaching'],['Yehi Ohr Center','yehi-ohr'],['Music','music'],['Tours','tours']]],
             ['Connect', [['Community','community'],['Visit Tzfat','visit'],['Newsletter','newsletter'],['Contact','contact'],['FAQ','faq']]],
-            ['Support', [['Donate','paypal'],['Monthly Light','paypal'],['Volunteer','support'],['Merch','merch'],['Vision','vision']]],
+            ['Support', [['Donate','donate'],['Monthly Light','donate'],['Volunteer','support'],['Merch','merch'],['Vision','vision']]],
           ].map(([title, items]) => (
             <div key={title}>
               <div className="font-mono text-[11px] tracking-[0.3em] uppercase text-[var(--gold)] mb-5">{title}</div>
               <ul className="space-y-3 text-[14px]">
                 {items.map(([label, id]) => (
                   <li key={label}>
-                    {id === 'paypal'
-                      ? <a href="https://www.paypal.com/paypalme/avshiweingot" target="_blank" rel="noopener noreferrer" className="link-soft text-[rgba(244,237,225,0.7)]">{label}</a>
+                    {id === 'donate'
+                      ? <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="link-soft text-[rgba(244,237,225,0.7)]">{label}</a>
                       : <button onClick={() => setRoute(id)} className="link-soft text-[rgba(244,237,225,0.7)]">{label}</button>}
                   </li>
                 ))}
@@ -322,4 +325,4 @@ function Eyebrow({ children, tone = 'gold' }) {
   );
 }
 
-Object.assign(window, { R, Placeholder, Photo, HeroBackdrop, Flame, Nav, Footer, Reveal, Eyebrow });
+Object.assign(window, { DONATE_URL, R, Placeholder, Photo, HeroBackdrop, Flame, Nav, Footer, Reveal, Eyebrow });

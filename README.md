@@ -10,7 +10,7 @@ Static site — no build step required.
 - Tailwind CSS (Play CDN)
 - Babel Standalone for inline JSX transpilation
 - Spotify and YouTube embeds (configurable in `pages3.jsx`)
-- Plain `<a>` deep links for WhatsApp + PayPal
+- Plain `<a>` deep links for WhatsApp + the donation page
 
 All site logic lives in a handful of `.jsx` files (no bundler).
 
@@ -77,7 +77,7 @@ Every photo is served as **WebP** capped at 1800px on the long edge — total `/
 ## Contact wiring
 
 - **WhatsApp**: `+972 54 540 4914` — chat opens at `api.whatsapp.com/send/...`
-- **PayPal**: `paypal.me/avshiweingot` — all donate CTAs
+- **Donations**: `donaciones.yehiohr.live` (Steady Connection, card payments by Stripe) — every donate button. Change it once: `DONATE_URL` in `components.jsx`. The page refuses to be embedded (`X-Frame-Options: DENY`), so buttons open it in a new tab.
 - **Newsletter form**: front-end only — wire to your provider of choice (Mailchimp, Buttondown, etc.) by replacing the form's `onSubmit` in `components.jsx → Footer`
 
 ## License

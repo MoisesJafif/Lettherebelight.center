@@ -668,7 +668,7 @@ function YehiOhrPage({ setRoute }) {
                   Every contribution helps transform the vision of Yehi Ohr into a permanent home for Torah, hospitality, music, prayer, and healing in Tzfat.
                 </p>
               </div>
-              <a href="https://www.paypal.com/paypalme/avshiweingot" target="_blank" rel="noopener noreferrer" className="btn-primary px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase whitespace-nowrap shrink-0">Help Build the Light →</a>
+              <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase whitespace-nowrap shrink-0">Help Build the Light →</a>
             </div>
           </Reveal>
         </div>

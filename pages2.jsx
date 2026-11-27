@@ -357,9 +357,6 @@ function TeachingPage({ setRoute }) {
 }
 
 function SupportPage({ setRoute }) {
-  const [amount, setAmount] = useState(180);
-  const [recurring, setRecurring] = useState(true);
-  const tiers = [54, 180, 360, 1800];
   return (
     <div data-screen-label="Support" className="pt-[72px]">
       <section className="py-24 sm:py-32 ambient-amber">
@@ -385,49 +382,23 @@ function SupportPage({ setRoute }) {
         <div className="max-w-[1100px] mx-auto px-6 sm:px-10">
           <Reveal>
             <div className="rounded-sm border border-[rgba(244,237,225,0.12)] bg-[rgba(20,16,10,0.6)] p-8 sm:p-12">
-              <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
-                <div>
-                  <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-[var(--gold)]">Lay Another Stone</div>
-                  <h2 className="font-display mt-2 text-[40px] sm:text-[52px] leading-[1.05]">Give once. Or every month.</h2>
-                </div>
-                <div className="flex items-center gap-1 rounded-full border border-[rgba(244,237,225,0.15)] p-1">
-                  {[['Monthly', true],['One time', false]].map(([l, v]) => (
-                    <button key={l} onClick={() => setRecurring(v)}
-                      className={`px-5 py-2 rounded-full text-[11px] tracking-[0.2em] uppercase transition-colors ${recurring===v?'bg-[var(--gold)] text-[#1a120b]':'text-[rgba(244,237,225,0.7)]'}`}>
-                      {l}
-                    </button>
-                  ))}
-                </div>
+              <div className="mb-8">
+                <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-[var(--gold)]">Lay Another Stone</div>
+                <h2 className="font-display mt-2 text-[40px] sm:text-[52px] leading-[1.05]">Give once. Or every month.</h2>
+                <p className="mt-5 text-[16px] leading-[1.75] text-[rgba(244,237,225,0.72)] max-w-2xl">
+                  Choose any amount, as a monthly partnership or a one-time gift, on our donation page. You can dedicate your gift there too: in memory of a loved one, for healing, or in honor of a celebration.
+                </p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {tiers.map(v => (
-                  <button key={v} onClick={() => setAmount(v)}
-                    className={`p-6 rounded-sm border transition-colors ${amount===v?'border-[var(--gold)] bg-[rgba(232,166,87,0.08)]':'border-[rgba(244,237,225,0.12)] hover:border-[rgba(244,237,225,0.3)]'}`}>
-                    <div className="font-display text-[36px]">${v}</div>
-                    <div className="mt-1 font-mono text-[9px] tracking-[0.25em] uppercase text-[rgba(244,237,225,0.5)]">
-                      {v===54?'Chai':v===180?'Chai × 10':v===360?'Builder':'Pillar'}
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-6 flex items-center gap-3">
-                <span className="text-[14px] text-[rgba(244,237,225,0.55)]">Other amount</span>
-                <input type="number" value={amount} onChange={e=>setAmount(+e.target.value||0)}
-                  className="flex-1 bg-transparent border-b border-[rgba(244,237,225,0.18)] focus:border-[var(--gold)] outline-none px-2 py-2 font-display text-[28px]" />
-                <span className="font-mono text-[12px] tracking-[0.2em] uppercase text-[rgba(244,237,225,0.5)]">USD</span>
-              </div>
-
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a href="https://www.paypal.com/paypalme/avshiweingot" target="_blank" rel="noopener noreferrer" className="btn-primary flex-1 text-center px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase font-medium">
-                  Help build the light · ${amount}{recurring?' / month':''}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary flex-1 text-center px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase font-medium">
+                  Help build the light →
                 </a>
-                <a href="https://www.paypal.com/paypalme/avshiweingot" target="_blank" rel="noopener noreferrer" className="btn-ghost text-center px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Sponsor a Shabbat</a>
+                <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-ghost text-center px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Sponsor a Shabbat</a>
               </div>
 
               <div className="mt-4 text-center text-[12px] text-[rgba(244,237,225,0.55)]">
-                You'll be redirected to PayPal to complete your secure gift.
+                You'll continue to our secure donation page to complete your gift.
               </div>
 
               <div className="mt-6 text-center font-mono text-[10px] tracking-[0.25em] uppercase text-[rgba(244,237,225,0.4)]">
@@ -589,7 +560,7 @@ function VisionPage({ setRoute }) {
               You are invited to help create something sacred \u2014 stone by stone, Shabbat by Shabbat. From dream to reality, together.
             </p>
             <div className="mt-10 flex flex-wrap gap-3 justify-center">
-              <a href="https://www.paypal.com/paypalme/avshiweingot" target="_blank" rel="noopener noreferrer" className="btn-primary px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Help Build the Light</a>
+              <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Help Build the Light</a>
               <button onClick={() => setRoute('community')} className="btn-ghost px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Visit Yehi Ohr</button>
             </div>
           </Reveal>
