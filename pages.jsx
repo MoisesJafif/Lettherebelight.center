@@ -109,7 +109,7 @@ function LatestClass() {
 
 // ============== RAV AVSHI ==============
 const RAV_STACK = [
-  { p: 'father', pos: '50% 30%', cap: 'With his father, Rav Rafael Weingot, founder of Yeshiva Shalom Rav.' },
+  { p: 'father', pos: '50% 30%', fit: 'contain', cap: 'With his father, Rav Rafael Weingot, founder of Yeshiva Shalom Rav.' },
   { p: 'group', pos: '55% 30%', cap: 'With students in the Old City of Tzfat.' },
   { p: 'fireMusic', pos: '40% 60%', cap: 'Teaching through song, by the fire.' },
   { p: 'praying', pos: '70% 35%', cap: 'In prayer.' },
@@ -216,7 +216,7 @@ function PhotoStack({ items }) {
             ? { transform: 'none', opacity: 1, zIndex: n }
             : { transform: `translate(${d * 10}px, ${d * -10}px) rotate(${d % 2 ? 2.5 : -2}deg) scale(${1 - d * 0.04})`, opacity: d > 2 ? 0 : 1 - d * 0.25, zIndex: n - d };
           return (
-            <figure key={it.p} className="pstack-card" style={style} aria-hidden={d !== 0}>
+            <figure key={it.p} className={`pstack-card ${it.fit === 'contain' ? 'contain' : ''}`} style={style} aria-hidden={d !== 0}>
               <img src={PHOTOS[it.p].src} alt={d === 0 ? PHOTOS[it.p].alt : ''} loading="lazy" decoding="async" style={{ objectPosition: it.pos }} />
             </figure>
           );

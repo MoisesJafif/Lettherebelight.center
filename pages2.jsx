@@ -20,10 +20,10 @@ function MusicPage() {
           </Rv>
           <div className="stack">
             <div className="eyebrow">Music · featured release</div>
-            <h1 className="display" tabIndex="-1" data-page-title>Adam Kadmon <span className="he candle" lang="he" dir="rtl" style={{ fontSize: '.5em' }}>אדם קדמון</span></h1>
+            <h1 className="display" tabIndex="-1" data-page-title>Adam Kadmon <span className="he candle" lang="he" dir="rtl" style={{ display: 'block', fontSize: '.5em', whiteSpace: 'nowrap', marginTop: 6 }}>אדם קדמון</span></h1>
             <p className="lede">{ADAM_KADMON.artists}. Released {ADAM_KADMON.released} · {ADAM_KADMON.length}.</p>
             <div className="btn-row">
-              <a className="btn btn-candle" href="#listen" onClick={(e) => { e.preventDefault(); setSel(0); setPlay(true); document.getElementById('listen')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' }); }}><Icon.play style={{ width: 14, height: 14 }} />Watch &amp; listen</a>
+              <a className="btn btn-candle" href="#music/listen" onClick={(e) => { e.preventDefault(); setSel(0); setPlay(true); document.getElementById('listen')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' }); }}><Icon.play style={{ width: 14, height: 14 }} />Watch &amp; listen</a>
               <a className="btn btn-line" href={'https://open.spotify.com/track/' + ADAM_KADMON.spotifyTrack} target="_blank" rel="noopener noreferrer"><Icon.sp />Spotify ↗</a>
             </div>
             <dl className="facts" style={{ paddingTop: 8 }}>
@@ -147,6 +147,14 @@ const NIGGUN_EVENING = [
 ];
 
 function CommunityPage() {
+  const [barAway, setBarAway] = useState(true);
+  useEffect(() => {
+    const el = document.querySelector('.opener .btn-candle');
+    if (!el || !('IntersectionObserver' in window)) { setBarAway(false); return; }
+    const io = new IntersectionObserver(([e]) => setBarAway(e.isIntersecting || e.boundingClientRect.top > 0));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
     <div className="page">
       <Opener photo={PHOTOS.group} position="55% 30%" eyebrow="Shabbat & community" title="Shabbat in Tzfat"
@@ -198,7 +206,7 @@ function CommunityPage() {
         </div>
       </section>
 
-      <div className="action-bar"><button className="btn btn-candle btn-block" onClick={() => openWA('shabbat')}><Icon.wa />Ask about Shabbat</button></div>
+      <div className={`action-bar ${barAway ? 'away' : ''}`} aria-hidden={barAway}><button tabIndex={barAway ? -1 : 0} className="btn btn-candle btn-block" onClick={() => openWA('shabbat')}><Icon.wa />Ask about Shabbat</button></div>
     </div>
   );
 }
@@ -238,10 +246,10 @@ function TeachingPage() {
                 <div className="h2 italic candle" style={{ fontSize: 34 }}>{s.n}.</div>
                 <h3 className="h3" style={{ fontSize: 28 }}>{s.title}</h3>
                 <p>{s.text}</p>
-                <a className="btn btn-ink" href={s.link.href} {...(s.link.ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})} style={{ alignSelf: 'flex-start' }}>
+                <a className="btn btn-ink" href={s.link.href} {...(s.link.ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})} style={{ display: 'inline-flex' }}>
                   {s.link.label} {s.link.ext ? '↗' : <Icon.arrow />}
                 </a>
-                <a className="text-link small" href={s.more.href} {...(s.more.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{s.more.label}{s.more.href.startsWith('http') ? ' ↗' : ' →'}</a>
+                <a className="text-link small" style={{ display: 'block' }} href={s.more.href} {...(s.more.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{s.more.label}{s.more.href.startsWith('http') ? ' ↗' : ' →'}</a>
               </Rv>
             ))}
           </div>

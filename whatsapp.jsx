@@ -313,7 +313,10 @@ function WhatsAppFloat() {
       setOpen(true);
     };
     window.addEventListener('yo:open-wa', onOpen);
-    return () => window.removeEventListener('yo:open-wa', onOpen);
+    // Leaving the page closes the panel so it never covers the next page.
+    const onNav = () => setOpen(false);
+    window.addEventListener('hashchange', onNav);
+    return () => { window.removeEventListener('yo:open-wa', onOpen); window.removeEventListener('hashchange', onNav); };
   }, []);
 
   // Outside click + Esc
@@ -344,7 +347,7 @@ function WhatsAppFloat() {
     setSending(true);
     setTimeout(() => {
       window.open(url, '_blank', 'noopener,noreferrer');
-      setTimeout(() => setSending(false), 800);
+      setTimeout(() => { setSending(false); setOpen(false); }, 800);
     }, 400);
   };
   const openEmpty = () => window.open(WA_OPEN_EMPTY, '_blank', 'noopener,noreferrer');
