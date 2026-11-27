@@ -7,9 +7,9 @@ A cinematic, immersive website for the Yehi Ohr spiritual center in Tzfat.
 Static site — no build step required.
 
 - React 18 (loaded via UMD CDN)
-- Tailwind CSS (Play CDN)
+- Hand-written CSS in `site.css` (Tailwind Play CDN only for the WhatsApp concierge)
 - Babel Standalone for inline JSX transpilation
-- Spotify and YouTube embeds (configurable in `pages3.jsx`)
+- Spotify and YouTube embeds (links in `content.jsx`)
 - Plain `<a>` deep links for WhatsApp + the donation page
 
 All site logic lives in a handful of `.jsx` files (no bundler).
@@ -46,29 +46,35 @@ npx serve .
 
 Open `http://localhost:8000`.
 
-## Configuration
+## Content and configuration
 
-Open `pages3.jsx` and paste into `CLASSES_CONFIG`:
+All links and recordings live in `content.jsx` and were checked against the
+Rabbi's own channels:
 
-- `YT_API_KEY` — YouTube Data API v3 key
-- `YT_CHANNEL_ID` — Rav Avshi's channel (UC…)
-- `SPOTIFY_EMBED_URL` — Spotify Share → Embed URL
-- `SPOTIFY_EPISODES` — episode IDs per tab (optional)
+- YouTube: `@lettherebelight-yehior` (channel `UCXmo5V_ly2VysOzHhg479qw`)
+- Spotify podcast: `2EoY2HZTKuBOnVxt2W7NgK`
+- WhatsApp: `+972 54 540 4914`; community chat link in `LINKS`
 
-Once set, the Classes page pulls live videos and playlists automatically. Nothing else needs to be touched per upload.
+The Torah Classes page reads `/api/classes` (a Vercel function that parses the
+channel's public RSS feed — no API key) and falls back to `CLASSES` in
+`content.jsx`. Photos carry a `kind`: `doc` (documentary) or `render`
+(architectural render / generated) — renders are always labelled on the page.
 
 ## File map
 
 | File | What it does |
 |---|---|
-| `index.html` | Document shell, fonts, design tokens, layered CSS |
-| `components.jsx` | Nav, Footer, Photo, Placeholder, Reveal, Eyebrow |
-| `whatsapp.jsx` | Floating WhatsApp concierge widget with intake form |
+| `index.html` | Document shell, fonts, boot screen |
+| `site.css` | Design system: tokens, type, layout, components |
+| `content.jsx` | Verified links, classes, playlists, Adam Kadmon credits, photo provenance |
+| `components.jsx` | Header and menu, footer, photo, YouTube/Spotify players, shared hooks |
+| `whatsapp.jsx` | WhatsApp concierge (EN/HE/ES) that pre-fills a message |
 | `pages.jsx` | Home, Rav Avshi, Yehi Ohr Center |
 | `pages2.jsx` | Music, Tours, Community, Teaching, Support, Vision, Contact, FAQ, Merch |
-| `pages3.jsx` | Torah Classes (live YouTube + Spotify) |
-| `app.jsx` | Router (`location.hash` based) + page mounting |
-| `assets/` | All images, WebP-optimized for the web |
+| `pages3.jsx` | Torah Classes |
+| `app.jsx` | Hash router (all old deep links kept) |
+| `api/classes.js` | Newest classes from the YouTube feed |
+| `review/` | Review captures and notes — excluded from deploys by `.vercelignore` |
 
 ## Image optimization
 
@@ -78,7 +84,7 @@ Every photo is served as **WebP** capped at 1800px on the long edge — total `/
 
 - **WhatsApp**: `+972 54 540 4914` — chat opens at `api.whatsapp.com/send/...`
 - **Donations**: `donaciones.yehiohr.live` (Steady Connection, card payments by Stripe) — every donate button. Change it once: `DONATE_URL` in `components.jsx`. The page refuses to be embedded (`X-Frame-Options: DENY`), so buttons open it in a new tab.
-- **Newsletter form**: front-end only — wire to your provider of choice (Mailchimp, Buttondown, etc.) by replacing the form's `onSubmit` in `components.jsx → Footer`
+- **Newsletter**: not offered yet. `#newsletter` points to the WhatsApp community, Spotify and YouTube until a provider is chosen.
 
 ## License
 
