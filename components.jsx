@@ -1,338 +1,349 @@
-const { useState, useEffect, useRef, useMemo } = React;
+const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
 // Donation page (Steady Connection, card payments by Stripe). Every donate button links here.
-const DONATE_URL = 'https://donaciones.yehiohr.live/#donate';
+const DONATE_URL = LINKS.donate;
 
-// ---------- Standalone resource resolver (unused in main build, kept for offline export) ----------
-function R(path) {
-  if (typeof path !== 'string') return path;
-  if (!path.startsWith('assets/')) return path;
-  if (typeof window === 'undefined' || !window.__resources) return path;
-  const id = path.slice(7).replace(/\.[^.]+$/, '');
-  return window.__resources[id] || path;
+// ---------- small helpers ----------
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function useReducedMotion() {
+  const [r, setR] = useState(prefersReducedMotion());
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const on = () => setR(mq.matches);
+    mq.addEventListener ? mq.addEventListener('change', on) : mq.addListener(on);
+    return () => (mq.removeEventListener ? mq.removeEventListener('change', on) : mq.removeListener(on));
+  }, []);
+  return r;
 }
 
-// ---------- Cinematic Placeholder ----------
-function Placeholder({ label, note, aspect = '16/9', className = '', kenburns = true }) {
-  return (
-    <div className={`placeholder-cinema ${className}`} style={{ aspectRatio: aspect }}>
-      <div className={`absolute inset-0 ${kenburns ? 'kenburns' : ''}`} style={{
-        background:
-          'radial-gradient(60% 50% at 30% 30%, rgba(232,166,87,0.22), transparent 65%), ' +
-          'radial-gradient(70% 60% at 75% 80%, rgba(93,107,58,0.18), transparent 70%), ' +
-          'repeating-linear-gradient(110deg, rgba(244,237,225,0.03) 0 1px, transparent 1px 9px)'
-      }} />
-      <div className="absolute inset-0 flex items-end p-5 sm:p-6">
-        <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[rgba(244,237,225,0.55)]">
-          <div className="text-[rgba(232,166,87,0.85)] mb-1">— image slot</div>
-          <div className="text-[rgba(244,237,225,0.85)]">{label}</div>
-          {note && <div className="mt-1 text-[rgba(244,237,225,0.45)] normal-case tracking-normal font-sans italic">{note}</div>}
-        </div>
-      </div>
-    </div>
-  );
+// Opens the WhatsApp concierge with a topic (and optional note) pre-filled.
+function openWA(topic, notes) {
+  window.dispatchEvent(new CustomEvent('yo:open-wa', { detail: { topic, notes } }));
 }
 
-// ---------- Real Photo (cinematic frame) ----------
-function Photo({ src, alt, aspect = '4/5', className = '', position = 'center', kenburns = false, caption }) {
-  return (
-    <div className={`relative overflow-hidden ${className}`} style={{ aspectRatio: aspect, background: '#14100a' }}>
-      <img
-        src={R(src)}
-        alt={alt}
-        className={`absolute inset-0 w-full h-full object-cover ${kenburns ? 'kenburns' : ''}`}
-        style={{ objectPosition: position }}
-        loading="lazy"
-      />
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(110% 90% at 50% 50%, transparent 55%, rgba(20,16,10,0.45) 100%)'
-      }} />
-      {caption && (
-        <div className="absolute bottom-3 left-4 font-mono text-[10px] tracking-[0.22em] uppercase text-[rgba(244,237,225,0.7)]">
-          {caption}
-        </div>
-      )}
-    </div>
-  );
+// Fade-in on first view (CSS handles reduced motion).
+function Rv({ as: Tag = 'div', className = '', children, ...rest }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    if (!('IntersectionObserver' in window)) { el.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect(); } }, { rootMargin: '0px 0px -8% 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return <Tag ref={ref} className={`rv ${className}`} {...rest}>{children}</Tag>;
 }
 
-// ---------- Hero video placeholder (looping cinematic) ----------
-function HeroBackdrop() {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 kenburns" style={{
-        backgroundImage: `url('${R('assets/hero-menorah.webp')}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 30%',
-        backgroundRepeat: 'no-repeat'
-      }} />
-      <div className="absolute inset-0" style={{
-        background:
-          'linear-gradient(90deg, rgba(20,16,10,0.78) 0%, rgba(20,16,10,0.55) 45%, rgba(20,16,10,0.25) 70%, rgba(20,16,10,0.55) 100%),' +
-          'linear-gradient(180deg, rgba(20,16,10,0.55) 0%, rgba(20,16,10,0.0) 30%, rgba(20,16,10,0.0) 55%, rgba(20,16,10,0.85) 100%)'
-      }} />
-      <div className="absolute inset-0 kenburns" style={{
-        background:
-          'radial-gradient(40% 30% at 22% 38%, rgba(232,166,87,0.22), transparent 60%),' +
-          'radial-gradient(55% 45% at 78% 65%, rgba(160,122,58,0.18), transparent 65%),' +
-          'radial-gradient(80% 65% at 50% 110%, rgba(20,16,10,0.65), rgba(20,16,10,0.2) 50%, transparent 80%)',
-        mixBlendMode: 'screen'
-      }} />
-      <div className="absolute inset-0 opacity-[0.18]" style={{
-        background:
-          'repeating-linear-gradient(92deg, rgba(217,199,167,0.06) 0 2px, transparent 2px 16px),' +
-          'repeating-linear-gradient(2deg, rgba(217,199,167,0.04) 0 1px, transparent 1px 22px)'
-      }} />
-      <div className="absolute" style={{ left: '14%', top: '58%' }}><Flame size={56} /></div>
-      <div className="absolute flicker" style={{ left: '22%', top: '62%', animationDelay: '0.8s' }}><Flame size={42} /></div>
-      <div className="absolute flicker" style={{ left: '78%', top: '72%', animationDelay: '1.6s' }}><Flame size={66} /></div>
-      <div className="absolute flicker" style={{ left: '86%', top: '66%', animationDelay: '0.4s' }}><Flame size={36} /></div>
-      <div className="absolute inset-0" style={{
-        background: 'radial-gradient(120% 90% at 50% 40%, transparent 30%, rgba(20,16,10,0.85) 100%)'
-      }} />
-      <div className="absolute bottom-4 right-5 font-mono text-[10px] tracking-[0.3em] uppercase text-[rgba(244,237,225,0.55)]">
-        still · tzfat · menorah lighting
-      </div>
-    </div>
-  );
+// ---------- icons ----------
+const Icon = {
+  arrow: (p) => <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}><path d="M4 10h12M11 5l5 5-5 5"/></svg>,
+  back: (p) => <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}><path d="M16 10H4M9 5l-5 5 5 5"/></svg>,
+  out: (p) => <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}><path d="M8 4H4v12h12v-4M11 4h5v5M16 4l-7 7"/></svg>,
+  play: (p) => <svg viewBox="0 0 16 18" fill="currentColor" aria-hidden="true" {...p}><path d="M0 0v18l16-9z"/></svg>,
+  down: (p) => <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}><path d="M10 4v12M5 11l5 5 5-5"/></svg>,
+  search: (p) => <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true" {...p}><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>,
+  wa: (p) => <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...p}><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .1-3.3-.7-2.7-1-4.4-3.8-4.5-3.9-.1-.2-1-1.4-1-2.7s.7-1.9.9-2.2c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.7.8 1.8s.1.3 0 .5c-.1.2-.2.3-.4.5-.1.1-.3.3-.1.5.1.3.7 1.1 1.5 1.8 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.4.7 1.6.8.2.1.4.2.4.3.1.1.1.7-.1 1.3z"/></svg>,
+  yt: (p) => <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...p}><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg>,
+  sp: (p) => <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...p}><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm4.8 15.1a.7.7 0 0 1-.9.2c-2.5-1.5-5.6-1.8-9.3-1a.7.7 0 1 1-.3-1.3c4-.9 7.5-.5 10.3 1.2.3.2.4.6.2.9zm1.3-2.9a.8.8 0 0 1-1.1.3c-2.8-1.7-7.1-2.2-10.5-1.2a.8.8 0 1 1-.5-1.6c3.8-1.1 8.6-.6 11.8 1.4.4.3.5.8.3 1.1zm.1-3c-3.4-2-8.9-2.2-12.1-1.2a1 1 0 1 1-.6-1.9c3.7-1.1 9.8-.9 13.7 1.4a1 1 0 0 1-1 1.7z"/></svg>,
+};
+
+// ---------- navigation model ----------
+// Five groups. Every existing route stays reachable; secondary routes live inside a group.
+const NAV = [
+  { id: 'learn', label: 'Learn', href: '#classes', items: [
+    { href: '#classes', label: 'Torah classes', note: 'Watch or listen to recent shiurim' },
+    { href: '#teaching', label: 'Teaching & path', note: 'Mind, heart and experience' },
+  ]},
+  { id: 'listen', label: 'Listen', href: '#music', items: [
+    { href: '#music', label: 'Music', note: 'Adam Kadmon and live niggunim' },
+    { href: LINKS.spotifyShow, label: 'Podcast on Spotify', note: 'Every class as audio', external: true },
+  ]},
+  { id: 'visit', label: 'Visit', href: '#yehi-ohr', items: [
+    { href: '#yehi-ohr', label: 'Yehi Ohr Center', note: 'Tzfat · ask about visiting' },
+    { href: '#tours', label: 'Tours & seminars', note: 'Uman, Tzfat and gatherings' },
+    { href: '#community', label: 'Shabbat & community', note: 'Ask about joining a Shabbat' },
+    { href: '#faq', label: 'Practical questions', note: 'Visiting, Shabbat, languages' },
+  ]},
+  { id: 'about', label: 'About', href: '#rav-avshi', items: [
+    { href: '#rav-avshi', label: 'Rav Avshi', note: 'His story, in his words' },
+    { href: '#vision', label: 'Vision', note: 'What exists and what is planned' },
+    { href: '#contact', label: 'Contact', note: 'WhatsApp and updates' },
+  ]},
+  { id: 'support', label: 'Support', href: '#support', items: [
+    { href: '#support', label: 'Give', note: 'Monthly or one-time' },
+    { href: '#merch', label: 'Merch', note: 'The Let There Be Light collection' },
+  ]},
+];
+const ROUTE_GROUP = {
+  classes: 'learn', 'torah-classes': 'learn', teaching: 'learn',
+  music: 'listen',
+  'yehi-ohr': 'visit', visit: 'visit', tours: 'visit', community: 'visit', faq: 'visit',
+  'rav-avshi': 'about', vision: 'about', contact: 'about', newsletter: 'about',
+  support: 'support', merch: 'support',
+};
+
+function NavLink({ item, route, className = '', onClick }) {
+  if (item.external) {
+    return <a href={item.href} target="_blank" rel="noopener noreferrer" className={className} onClick={onClick}>{item.children || item.label}</a>;
+  }
+  const current = item.href === '#' + route;
+  return <a href={item.href} className={className} aria-current={current ? 'page' : undefined} onClick={onClick}>{item.children || item.label}</a>;
 }
 
-function Flame({ size = 50 }) {
-  return (
-    <div className="flicker float-slow" style={{
-      width: size, height: size,
-      borderRadius: '50%',
-      background: 'radial-gradient(circle at 50% 60%, rgba(255,220,150,0.95) 0%, rgba(232,166,87,0.7) 30%, rgba(202,82,30,0.35) 55%, transparent 75%)',
-      filter: 'blur(0.5px)',
-      mixBlendMode: 'screen'
-    }} />
-  );
-}
-
-// ---------- Nav ----------
-function Nav({ route, setRoute, lang, setLang }) {
-  const [scrolled, setScrolled] = useState(false);
+// ---------- Header ----------
+function Header({ route }) {
   const [open, setOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const sheetRef = useRef(null);
+  const btnRef = useRef(null);
+  const isHome = route === 'home';
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    const on = () => setScrolled(window.scrollY > 40);
+    on(); window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
   }, []);
+  useEffect(() => { setOpen(false); }, [route]);
+  useEffect(() => {
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (!open) return;
+    const onKey = (e) => { if (e.key === 'Escape') { setOpen(false); btnRef.current && btnRef.current.focus(); } };
+    window.addEventListener('keydown', onKey);
+    const first = sheetRef.current && sheetRef.current.querySelector('a');
+    first && first.focus({ preventScroll: true });
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
 
-  const links = [
-    ['home', 'Home'],
-    ['rav-avshi', 'Rav Avshi'],
-    ['yehi-ohr', 'Yehi Ohr'],
-    ['classes', 'Classes'],
-    ['music', 'Music'],
-    ['tours', 'Journeys'],
-    ['community', 'Community'],
-    ['support', 'Support', DONATE_URL],
-  ];
+  const group = ROUTE_GROUP[route];
 
   return (
-    <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${scrolled ? 'nav-scrolled' : 'nav-glass'}`}>
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 h-[72px] flex items-center justify-between">
-        <button onClick={() => setRoute('home')} className="flex items-center gap-3 group">
-          <div className="relative">
-            <div className="w-8 h-8 rounded-full flicker" style={{
-              background: 'radial-gradient(circle, rgba(255,220,150,0.9), rgba(232,166,87,0.5) 40%, transparent 70%)'
-            }} />
-          </div>
-          <div className="leading-tight text-left">
-            <div className="font-display text-[20px] tracking-wide">Yehi Ohr</div>
-            <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-[rgba(244,237,225,0.55)]">Let There Be Light · Tzfat</div>
-          </div>
-        </button>
+    <>
+      <header className={`site-header ${isHome && !scrolled && !open ? 'over-hero' : ''}`}>
+        <div className="wrap header-row">
+          <a href="#home" className="brand" aria-label="Yehi Ohr — home">
+            <span className="brand-flame" aria-hidden="true" />
+            <span className="brand-name">Yehi Ohr</span>
+            <span className="brand-he" lang="he" dir="rtl" aria-hidden="true">יהי אור</span>
+          </a>
 
-        <div className="hidden lg:flex items-center gap-9">
-          {links.map(([id, label, href]) => href ? (
-            <a key={id} href={href} target="_blank" rel="noopener noreferrer"
-              className="link-soft text-[13px] tracking-[0.12em] uppercase text-[rgba(244,237,225,0.78)]">
-              {label}
-            </a>
-          ) : (
-            <button
-              key={id}
-              onClick={() => setRoute(id)}
-              className={`link-soft text-[13px] tracking-[0.12em] uppercase ${route === id ? 'text-[var(--gold)]' : 'text-[rgba(244,237,225,0.78)]'}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <button onClick={() => setLangOpen(o => !o)}
-              className="font-mono text-[11px] tracking-[0.25em] uppercase text-[rgba(244,237,225,0.65)] hover:text-[var(--gold)] transition-colors px-2 py-2">
-              {lang}
-            </button>
-            {langOpen && (
-              <div className="absolute right-0 mt-1 w-24 rounded-sm border border-[rgba(244,237,225,0.1)] bg-[#1f1810]/95 backdrop-blur-xl">
-                {['EN','HE','ES'].map(l => (
-                  <button key={l} onClick={() => { setLang(l); setLangOpen(false); }}
-                    className={`block w-full text-left px-3 py-2 font-mono text-[11px] tracking-[0.25em] hover:bg-[rgba(244,237,225,0.04)] ${lang===l?'text-[var(--gold)]':'text-[rgba(244,237,225,0.7)]'}`}>
-                    {l}
-                  </button>
-                ))}
+          <nav className="desk-nav" aria-label="Main">
+            {NAV.map(g => (
+              <div className="desk-group" key={g.id}>
+                <a href={g.href} className="desk-link" aria-current={group === g.id ? 'page' : undefined}>{g.label}</a>
+                <div className="desk-pop">
+                  {g.items.map(it => (
+                    <NavLink key={it.href} route={route} item={{ ...it, children: <>{it.label}{it.external ? ' ↗' : ''}<small>{it.note}</small></> }} />
+                  ))}
+                </div>
               </div>
-            )}
-          </div>
-          <a href="https://api.whatsapp.com/send/?phone=%2B972545404914&text&type=phone_number&app_absent=0"
-             target="_blank" rel="noopener noreferrer"
-             className="hidden md:inline-flex items-center gap-2 text-[12px] tracking-[0.12em] uppercase btn-ghost px-4 py-2 rounded-full transition-all duration-300 hover:border-[var(--gold)] hover:text-[var(--gold)] hover:shadow-[0_0_24px_rgba(232,166,87,0.22)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--olive)] flicker" />
-            WhatsApp
+            ))}
+          </nav>
+
+          <a href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer" className="icon-btn wa" aria-label="WhatsApp Rav Avshi's team">
+            <Icon.wa /><span className="wa-label">WhatsApp</span>
           </a>
-          <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary text-[12px] tracking-[0.14em] uppercase px-5 py-2.5 rounded-full font-medium">
-            Be the Light
-          </a>
-          <button onClick={() => setOpen(o => !o)} className="lg:hidden ml-1 p-2 text-[rgba(244,237,225,0.8)]">
-            <div className="space-y-1.5">
-              <div className="w-5 h-px bg-current"></div>
-              <div className="w-5 h-px bg-current"></div>
-            </div>
+          <button ref={btnRef} className="icon-btn menu-btn" aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(o => !o)}>
+            <span className="bars" aria-hidden="true" /><span>{open ? 'Close' : 'Menu'}</span>
           </button>
         </div>
-      </div>
+      </header>
 
-      {open && (
-        <div className="lg:hidden border-t border-[rgba(244,237,225,0.08)] bg-[#14100a]/95 backdrop-blur-xl">
-          {links.map(([id, label, href]) => href ? (
-            <a key={id} href={href} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}
-              className="block w-full text-left px-8 py-4 text-[13px] tracking-[0.12em] uppercase border-b border-[rgba(244,237,225,0.04)] text-[rgba(244,237,225,0.8)]">
-              {label}
-            </a>
-          ) : (
-            <button key={id} onClick={() => { setRoute(id); setOpen(false); }}
-              className={`block w-full text-left px-8 py-4 text-[13px] tracking-[0.12em] uppercase border-b border-[rgba(244,237,225,0.04)] ${route===id?'text-[var(--gold)]':'text-[rgba(244,237,225,0.8)]'}`}>
-              {label}
-            </button>
+      <div id="site-menu" ref={sheetRef} className={`sheet ${open ? 'open' : ''}`} aria-hidden={!open} role="dialog" aria-label="Site menu">
+        <nav aria-label="Main">
+          {NAV.map(g => (
+            <div className="sheet-group" key={g.id}>
+              <a className="sheet-title" href={g.href} tabIndex={open ? 0 : -1}>{g.label}<Icon.arrow width="22" height="22" /></a>
+              <div className="sheet-links">
+                {g.items.map(it => (
+                  <NavLink key={it.href} route={route} item={{ ...it, children: <><span>{it.label}</span><span className="small" style={{ color: 'var(--on-ink-faint)' }}>{it.external ? '↗' : ''}</span></> }}
+                    onClick={() => setOpen(false)} className="" />
+                ))}
+              </div>
+            </div>
           ))}
+        </nav>
+        <div className="sheet-foot">
+          <a href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-candle btn-block" tabIndex={open ? 0 : -1}><Icon.wa />WhatsApp {LINKS.whatsappNumber}</a>
+          <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-line btn-block" style={{ borderColor: 'rgba(246,239,227,.4)', color: 'var(--on-ink)' }} tabIndex={open ? 0 : -1}>Give to Yehi Ohr ↗</a>
         </div>
-      )}
-    </nav>
+      </div>
+    </>
   );
 }
 
 // ---------- Footer ----------
-function Footer({ setRoute, lang, setLang }) {
+function Footer() {
   return (
-    <footer className="relative mt-24 border-t border-[rgba(244,237,225,0.08)] bg-[#0f0a05]">
-      <div className="absolute inset-x-0 top-0 h-px hairline-gold" />
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 py-20">
-        <div className="grid lg:grid-cols-12 gap-10 pb-16 border-b border-[rgba(244,237,225,0.06)]">
-          <div className="lg:col-span-6">
-            <div className="font-mono text-[11px] tracking-[0.3em] uppercase text-[var(--gold)] mb-4">Newsletter</div>
-            <h3 className="font-display text-[40px] sm:text-[54px] leading-[1.05] text-balance">
-              Letters of light, arriving softly.
-            </h3>
-            <p className="mt-5 text-[15px] leading-relaxed text-[rgba(244,237,225,0.65)] max-w-md">
-              A weekly note from Rav Avshi — Torah reflections, upcoming gatherings, new music. No noise. Just light.
-            </p>
+    <footer className="site-footer">
+      <div className="wrap">
+        <div className="foot-top">
+          <div>
+            <div className="brand" style={{ margin: 0 }}>
+              <span className="brand-flame" aria-hidden="true" />
+              <span className="brand-name">Yehi Ohr</span>
+              <span className="brand-he" lang="he" dir="rtl">יהי אור</span>
+            </div>
+            <p className="small" style={{ marginTop: 10, maxWidth: '26em' }}>Torah, music and Shabbat with Rav Avshi Weingot · Old City, Tzfat.</p>
           </div>
-          <div className="lg:col-span-6 flex items-end">
-            <form className="w-full flex flex-col sm:flex-row gap-3" onSubmit={e => e.preventDefault()}>
-              <input type="email" placeholder="your@email"
-                className="flex-1 bg-transparent border border-[rgba(244,237,225,0.18)] focus:border-[var(--gold)] outline-none px-5 py-4 rounded-full text-[15px] placeholder:text-[rgba(244,237,225,0.35)] transition-colors" />
-              <button className="btn-primary px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase font-medium">Subscribe</button>
-            </form>
+          <div className="btn-row">
+            <a href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-candle"><Icon.wa />WhatsApp</a>
           </div>
         </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 py-16">
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-7 h-7 rounded-full flicker" style={{ background: 'radial-gradient(circle, rgba(255,220,150,0.9), rgba(232,166,87,0.4) 50%, transparent 75%)' }} />
-              <div className="font-display text-[22px]">Yehi Ohr</div>
-            </div>
-            <p className="text-[14px] leading-relaxed text-[rgba(244,237,225,0.55)] max-w-sm">
-              A living spiritual center in Tzfat dedicated to learning, prayer, music, Shabbat, and transformational experiences with Rav Avshi.
-            </p>
-            <div className="mt-6 font-mono text-[11px] tracking-[0.2em] uppercase text-[rgba(244,237,225,0.45)]">
-              <div>Old City · Tzfat · Israel</div>
-              <div className="mt-1">hello@lettherebelight.center</div>
-            </div>
-          </div>
-
-          {[
-            ['Explore', [['Rav Avshi','rav-avshi'],['Teaching & Path','teaching'],['Yehi Ohr Center','yehi-ohr'],['Music','music'],['Tours','tours']]],
-            ['Connect', [['Community','community'],['Visit Tzfat','visit'],['Newsletter','newsletter'],['Contact','contact'],['FAQ','faq']]],
-            ['Support', [['Donate','donate'],['Monthly Light','donate'],['Volunteer','support'],['Merch','merch'],['Vision','vision']]],
-          ].map(([title, items]) => (
-            <div key={title}>
-              <div className="font-mono text-[11px] tracking-[0.3em] uppercase text-[var(--gold)] mb-5">{title}</div>
-              <ul className="space-y-3 text-[14px]">
-                {items.map(([label, id]) => (
-                  <li key={label}>
-                    {id === 'donate'
-                      ? <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="link-soft text-[rgba(244,237,225,0.7)]">{label}</a>
-                      : <button onClick={() => setRoute(id)} className="link-soft text-[rgba(244,237,225,0.7)]">{label}</button>}
-                  </li>
-                ))}
+        <nav className="foot-cols" aria-label="Footer">
+          {NAV.map(g => (
+            <div key={g.id}>
+              <h3>{g.label}</h3>
+              <ul>
+                {g.items.map(it => <li key={it.href}><NavLink item={{ ...it, children: it.label + (it.external ? ' ↗' : '') }} route="" /></li>)}
               </ul>
             </div>
           ))}
-        </div>
-
-        <div className="pt-8 border-t border-[rgba(244,237,225,0.06)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono tracking-[0.2em] uppercase text-[rgba(244,237,225,0.4)]">
-          <div>© 5786 · Yehi Ohr · Built with love in Tzfat</div>
-          <div className="flex items-center gap-5">
-            {['EN','HE','ES'].map(l => (
-              <button key={l} onClick={() => setLang(l)} className={lang===l ? 'text-[var(--gold)]' : 'hover:text-[var(--parchment)]'}>{l}</button>
-            ))}
-            <span className="opacity-40">·</span>
-            <a href="#" className="hover:text-[var(--parchment)]">Instagram</a>
-            <a href="#" className="hover:text-[var(--parchment)]">YouTube</a>
-            <a href="#" className="hover:text-[var(--parchment)]">Spotify</a>
-          </div>
+        </nav>
+        <div className="foot-base">
+          <a href={LINKS.youtube} target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+          <a href={LINKS.spotifyShow} target="_blank" rel="noopener noreferrer">Spotify ↗</a>
+          <a href={LINKS.whatsappCommunity} target="_blank" rel="noopener noreferrer">WhatsApp community ↗</a>
+          <a href="#newsletter">Updates</a>
+          <span style={{ marginInlineStart: 'auto' }}>© Yehi Ohr · Tzfat</span>
         </div>
       </div>
     </footer>
   );
 }
 
-// ---------- Reveal on scroll ----------
-function Reveal({ children, delay = 0, className = '' }) {
-  const ref = useRef(null);
-  const [seen, setSeen] = useState(false);
+// ---------- Photo with provenance ----------
+function Photo({ p, aspect = '4/5', position = 'center', className = '', eager = false, showBadge = true, style }) {
+  if (!p) return null;
+  return (
+    <div className={`photo ${className}`} style={{ aspectRatio: aspect, ...style }}>
+      <img src={p.src} alt={p.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" style={{ objectPosition: position }} />
+      {showBadge && <Provenance kind={p.kind} />}
+    </div>
+  );
+}
+function Provenance({ kind }) {
+  if (kind === 'render') return <span className="badge badge-render"><span>Render</span></span>;
+  if (kind === 'plan') return <span className="badge badge-plan"><span>Plan</span></span>;
+  if (kind === 'story') return <span className="badge badge-story"><span>Storyboard</span></span>;
+  return null; // documentary photos carry no badge
+}
+
+// ---------- YouTube (poster first, iframe on tap — sound is always visitor-initiated) ----------
+function YouTubePlayer({ id, title, sec, date, compact = false, label, autostart = false }) {
+  const [on, setOn] = useState(autostart);
+  return (
+    <div>
+      <div className="player">
+        {on ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1`}
+            title={title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+        ) : (
+          <button className="player-poster" onClick={() => setOn(true)} aria-label={`Play: ${title}`}>
+            <img src={ytThumb(id)} alt="" loading="lazy" decoding="async" />
+            <span className="play-dot"><Icon.play /></span>
+          </button>
+        )}
+      </div>
+      {!compact && (
+        <div className="player-meta">
+          {label && <span className="eyebrow">{label}</span>}
+          {sec ? <span>{fmtDuration(sec)}</span> : null}
+          {date ? <span>{fmtDate(date)}</span> : null}
+          <a className="text-link" href={ytWatch(id)} target="_blank" rel="noopener noreferrer">Open on YouTube ↗</a>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Spotify embed loads only when asked for (third-party, heavy on phones).
+function SpotifyEmbed({ kind = 'show', id, height = 232, title = 'Spotify player', cta = 'Load the Spotify player' }) {
+  const [on, setOn] = useState(false);
+  const url = `https://open.spotify.com/${kind}/${id}`;
+  if (!on) {
+    return (
+      <div className="btn-row">
+        <button className="btn btn-line" onClick={() => setOn(true)}><Icon.sp />{cta}</button>
+        <a className="text-link" href={url} target="_blank" rel="noopener noreferrer">Open in Spotify ↗</a>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <div className="spotify-frame">
+        <iframe src={`https://open.spotify.com/embed/${kind}/${id}?utm_source=generator&theme=0`} height={height} title={title}
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" />
+      </div>
+      <p className="small" style={{ marginTop: 8 }}>Player not showing? <a className="text-link" href={url} target="_blank" rel="noopener noreferrer">Open in Spotify ↗</a></p>
+    </div>
+  );
+}
+
+// ---------- latest classes (live feed with verified fallback) ----------
+let __classesCache = null;
+function useClasses() {
+  const [list, setList] = useState(__classesCache || CLASSES);
+  const [source, setSource] = useState(__classesCache ? 'live' : 'saved');
   useEffect(() => {
-    const el = ref.current; if (!el) { setSeen(true); return; }
-    const checkInView = () => {
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      if (r.top < vh * 0.95 && r.bottom > 0) { setSeen(true); return true; }
-      return false;
-    };
-    if (checkInView()) return;
-    let io;
-    try {
-      io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io && io.disconnect(); } }, { threshold: 0.05 });
-      io.observe(el);
-    } catch (_) {}
-    const onScroll = () => { if (checkInView()) { window.removeEventListener('scroll', onScroll); } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    const t = setTimeout(() => setSeen(true), 400);
-    return () => { io && io.disconnect(); window.removeEventListener('scroll', onScroll); clearTimeout(t); };
+    if (__classesCache) return;
+    let dead = false;
+    fetch('/api/classes', { headers: { accept: 'application/json' } })
+      .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(d => {
+        if (dead || !d || !Array.isArray(d.items) || !d.items.length) return;
+        const known = Object.fromEntries(CLASSES.map(c => [c.id, c]));
+        // Curated entries keep their edited title and summary; new uploads use the
+        // channel's title without the " | Rav Avshi" style suffix.
+        const merged = d.items.map(it => {
+          const k = known[it.id];
+          if (k) return { ...it, ...k, summary: k.summary || it.summary || '' };
+          const title = it.title.replace(/\s*[|–-]\s*(Rav Avshi( Weingot)?|Likutei Moharan)\s*$/i, '').trim();
+          return { ...it, title, tag: tagFor(it.title) };
+        });
+        __classesCache = merged; setList(merged); setSource('live');
+      })
+      .catch(() => {});
+    return () => { dead = true; };
   }, []);
+  return { list, source };
+}
+
+// ---------- page opener (photo + concise lead + one action) ----------
+function Opener({ photo, position, eyebrow, title, children, actions, badge = true }) {
   return (
-    <div ref={ref} className={`reveal ${seen ? 'in' : ''} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
-      {children}
-    </div>
+    <section className="opener">
+      <div className="opener-media">
+        <img src={photo.src} alt={photo.alt} style={{ objectPosition: position || 'center' }} />
+        {badge && <Provenance kind={photo.kind} />}
+      </div>
+      <div className="opener-copy on-photo">
+        {eyebrow && <div className="eyebrow">{eyebrow}</div>}
+        <h1 className="display" style={{ marginTop: 10 }} tabIndex="-1" data-page-title>{title}</h1>
+        {children && <div className="lede" style={{ marginTop: 16, color: 'var(--on-ink-soft)' }}>{children}</div>}
+        {actions && <div className="btn-row" style={{ marginTop: 24 }}>{actions}</div>}
+      </div>
+    </section>
   );
 }
 
-// ---------- Section heading with ornament ----------
-function Eyebrow({ children, tone = 'gold' }) {
+// Plain lead for text-first pages.
+function Lead({ eyebrow, title, children, actions, className = '' }) {
   return (
-    <div className={`font-mono text-[11px] tracking-[0.3em] uppercase flex items-center gap-3 ${tone==='gold' ? 'text-[var(--gold)]' : 'text-[rgba(244,237,225,0.6)]'}`}>
-      <span className="w-6 h-px bg-current" />
-      <span>{children}</span>
-    </div>
+    <section className={`lead ${className}`}>
+      <div className="wrap">
+        {eyebrow && <div className="eyebrow">{eyebrow}</div>}
+        <h1 className="display" style={{ marginTop: 10, maxWidth: '14em' }} tabIndex="-1" data-page-title>{title}</h1>
+        {children && <div className="lede" style={{ marginTop: 16 }}>{children}</div>}
+        {actions && <div className="btn-row" style={{ marginTop: 24 }}>{actions}</div>}
+      </div>
+    </section>
   );
 }
 
-Object.assign(window, { DONATE_URL, R, Placeholder, Photo, HeroBackdrop, Flame, Nav, Footer, Reveal, Eyebrow });
+Object.assign(window, {
+  DONATE_URL, useReducedMotion, prefersReducedMotion, openWA, Rv, Icon, NAV, ROUTE_GROUP, Header, Footer,
+  Photo, Provenance, YouTubePlayer, SpotifyEmbed, useClasses, Opener, Lead,
+});

@@ -1,53 +1,67 @@
-const { useState: useStateApp, useEffect: useEffectApp } = React;
+// Hash router. Every existing deep link keeps working (#rav-avshi, #classes,
+// #torah-classes, #newsletter, #visit …) and the browser back button moves
+// between pages. A second segment (e.g. #faq/shabbat) targets a section.
+
+const ROUTES = {
+  home:            ['Yehi Ohr — Rav Avshi · Let There Be Light', () => HomePage],
+  'rav-avshi':     ['Rav Avshi · Yehi Ohr', () => RavAvshiPage],
+  'yehi-ohr':      ['Visit the Yehi Ohr Center · Tzfat', () => YehiOhrPage],
+  visit:           ['Visit the Yehi Ohr Center · Tzfat', () => YehiOhrPage],
+  vision:          ['Vision · Yehi Ohr', () => VisionPage],
+  teaching:        ['Teaching & Path · Yehi Ohr', () => TeachingPage],
+  classes:         ['Torah Classes · Yehi Ohr', () => TorahClassesPage],
+  'torah-classes': ['Torah Classes · Yehi Ohr', () => TorahClassesPage],
+  music:           ['Music · Yehi Ohr', () => MusicPage],
+  tours:           ['Tours & Seminars · Yehi Ohr', () => ToursPage],
+  community:       ['Shabbat & Community · Yehi Ohr', () => CommunityPage],
+  support:         ['Support Yehi Ohr', () => SupportPage],
+  contact:         ['Contact · Yehi Ohr', () => ContactPage],
+  newsletter:      ['Updates · Yehi Ohr', () => ContactPage],
+  faq:             ['Practical Questions · Yehi Ohr', () => FAQPage],
+  merch:           ['Merch · Yehi Ohr', () => MerchPage],
+};
+
+function parseHash() {
+  const raw = decodeURIComponent(window.location.hash.replace(/^#\/?/, ''));
+  const [route, sub] = raw.split('/');
+  return { route: ROUTES[route] ? route : 'home', sub: sub || (route === 'newsletter' ? 'updates' : '') };
+}
 
 function App() {
-  const [route, setRouteRaw] = useStateApp(() => {
-    const h = window.location.hash.replace('#','');
-    return h || 'home';
-  });
-  const [lang, setLang] = useStateApp('EN');
+  const [{ route, sub }, setLoc] = React.useState(parseHash);
+  const first = React.useRef(true);
 
-  const setRoute = (r) => {
-    setRouteRaw(r);
-    window.location.hash = r;
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
-
-  useEffectApp(() => {
-    const onHash = () => setRouteRaw(window.location.hash.replace('#','') || 'home');
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
+  React.useEffect(() => {
+    const on = () => setLoc(parseHash());
+    window.addEventListener('hashchange', on);
+    return () => window.removeEventListener('hashchange', on);
   }, []);
 
-  let Page;
-  switch (route) {
-    case 'rav-avshi': Page = RavAvshiPage; break;
-    case 'yehi-ohr': Page = YehiOhrPage; break;
-    case 'music': Page = MusicPage; break;
-    case 'tours': Page = ToursPage; break;
-    case 'community': Page = CommunityPage; break;
-    case 'teaching': Page = TeachingPage; break;
-    case 'classes':
-    case 'torah-classes': Page = TorahClassesPage; break;
-    case 'support': Page = SupportPage; break;
-    case 'vision': Page = VisionPage; break;
-    case 'contact': Page = ContactPage; break;
-    case 'faq': Page = FAQPage; break;
-    case 'merch': Page = MerchPage; break;
-    case 'newsletter':
-    case 'visit':
-      // route these to relevant existing pages
-      Page = CommunityPage; break;
-    default: Page = HomePage;
-  }
+  React.useEffect(() => {
+    document.title = ROUTES[route][0];
+    const target = sub && document.getElementById(sub);
+    if (target) {
+      requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+    } else if (!first.current) {
+      window.scrollTo(0, 0);
+    }
+    // Move focus to the new page heading so screen readers announce it.
+    if (!first.current) {
+      const h = document.querySelector('[data-page-title]');
+      h && h.focus({ preventScroll: true });
+    }
+    first.current = false;
+  }, [route, sub]);
+
+  const Page = ROUTES[route][1]();
 
   return (
     <>
-      <Nav route={route} setRoute={setRoute} lang={lang} setLang={setLang} />
-      <main key={route} className="page-enter page-enter-active">
-        <Page setRoute={setRoute} />
+      <Header route={route} />
+      <main id="main" tabIndex="-1" key={route}>
+        <Page sub={sub} />
       </main>
-      <Footer setRoute={setRoute} lang={lang} setLang={setLang} />
+      <Footer />
       <WhatsAppFloat />
     </>
   );
