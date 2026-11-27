@@ -129,7 +129,7 @@ function Nav({ route, setRoute, lang, setLang }) {
     ['music', 'Music'],
     ['tours', 'Journeys'],
     ['community', 'Community'],
-    ['support', 'Support'],
+    ['support', 'Support', DONATE_URL],
   ];
 
   return (
@@ -148,7 +148,12 @@ function Nav({ route, setRoute, lang, setLang }) {
         </button>
 
         <div className="hidden lg:flex items-center gap-9">
-          {links.map(([id, label]) => (
+          {links.map(([id, label, href]) => href ? (
+            <a key={id} href={href} target="_blank" rel="noopener noreferrer"
+              className="link-soft text-[13px] tracking-[0.12em] uppercase text-[rgba(244,237,225,0.78)]">
+              {label}
+            </a>
+          ) : (
             <button
               key={id}
               onClick={() => setRoute(id)}
@@ -196,7 +201,12 @@ function Nav({ route, setRoute, lang, setLang }) {
 
       {open && (
         <div className="lg:hidden border-t border-[rgba(244,237,225,0.08)] bg-[#14100a]/95 backdrop-blur-xl">
-          {links.map(([id, label]) => (
+          {links.map(([id, label, href]) => href ? (
+            <a key={id} href={href} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}
+              className="block w-full text-left px-8 py-4 text-[13px] tracking-[0.12em] uppercase border-b border-[rgba(244,237,225,0.04)] text-[rgba(244,237,225,0.8)]">
+              {label}
+            </a>
+          ) : (
             <button key={id} onClick={() => { setRoute(id); setOpen(false); }}
               className={`block w-full text-left px-8 py-4 text-[13px] tracking-[0.12em] uppercase border-b border-[rgba(244,237,225,0.04)] ${route===id?'text-[var(--gold)]':'text-[rgba(244,237,225,0.8)]'}`}>
               {label}

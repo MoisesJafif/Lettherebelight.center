@@ -755,7 +755,7 @@ function YehiOhrPage({ setRoute }) {
             </p>
             <div className="mt-10 flex flex-wrap gap-3 justify-center">
               <button onClick={() => setRoute('community')} className="btn-primary px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Plan Your Visit</button>
-              <button onClick={() => setRoute('support')} className="btn-ghost px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Help Build the Light</button>
+              <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-ghost px-7 py-4 rounded-full text-[12px] tracking-[0.18em] uppercase">Help Build the Light</a>
             </div>
           </Reveal>
         </div>
