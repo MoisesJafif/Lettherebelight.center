@@ -9,6 +9,7 @@ const SHELF = [
 
 function MusicPage() {
   const [sel, setSel] = useState(0);
+  const [play, setPlay] = useState(false); // true once the visitor asks to listen
   const cur = SHELF[sel];
   return (
     <div className="page">
@@ -22,7 +23,7 @@ function MusicPage() {
             <h1 className="display" tabIndex="-1" data-page-title>Adam Kadmon <span className="he candle" lang="he" dir="rtl" style={{ fontSize: '.5em' }}>אדם קדמון</span></h1>
             <p className="lede">{ADAM_KADMON.artists}. Released {ADAM_KADMON.released} · {ADAM_KADMON.length}.</p>
             <div className="btn-row">
-              <a className="btn btn-candle" href="#listen" onClick={(e) => { e.preventDefault(); setSel(0); document.getElementById('listen')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' }); }}><Icon.play style={{ width: 14, height: 14 }} />Watch &amp; listen</a>
+              <a className="btn btn-candle" href="#listen" onClick={(e) => { e.preventDefault(); setSel(0); setPlay(true); document.getElementById('listen')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' }); }}><Icon.play style={{ width: 14, height: 14 }} />Watch &amp; listen</a>
               <a className="btn btn-line" href={'https://open.spotify.com/track/' + ADAM_KADMON.spotifyTrack} target="_blank" rel="noopener noreferrer"><Icon.sp />Spotify ↗</a>
             </div>
             <dl className="facts" style={{ paddingTop: 8 }}>
@@ -39,7 +40,7 @@ function MusicPage() {
           <h2 id="shelf-title" className="h2" style={{ marginTop: 8 }}>Songs and niggunim with Rav Avshi</h2>
           <div className="scroll-x" role="tablist" aria-label="Recordings" style={{ marginTop: 20 }}>
             {SHELF.map((s, k) => (
-              <button key={s.key} role="tab" aria-selected={k === sel} onClick={() => setSel(k)}
+              <button key={s.key} role="tab" aria-selected={k === sel} onClick={() => { setSel(k); setPlay(true); }}
                 style={{ width: 168, textAlign: 'left', opacity: k === sel ? 1 : .72, transition: 'opacity .3s' }}>
                 <img src={s.cover} alt="" loading="lazy" style={{ width: 168, height: 168, objectFit: 'cover', borderRadius: 6, outline: k === sel ? '3px solid var(--candle)' : 'none', outlineOffset: 2 }} />
                 <span className="class-title" style={{ display: 'block', fontSize: 18, marginTop: 10 }}>{s.title}</span>
@@ -48,7 +49,7 @@ function MusicPage() {
             ))}
           </div>
           <div style={{ marginTop: 24, maxWidth: 860 }} role="tabpanel">
-            <YouTubePlayer key={cur.id} id={cur.id} title={cur.title} label={cur.title} />
+            <YouTubePlayer key={cur.id + (play ? ':on' : '')} id={cur.id} title={cur.title} label={cur.title} autostart={play} />
           </div>
         </div>
       </section>

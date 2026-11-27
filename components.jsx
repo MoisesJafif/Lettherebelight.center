@@ -295,7 +295,14 @@ function useClasses() {
       .then(d => {
         if (dead || !d || !Array.isArray(d.items) || !d.items.length) return;
         const known = Object.fromEntries(CLASSES.map(c => [c.id, c]));
-        const merged = d.items.map(it => ({ ...(known[it.id] || {}), ...it, sec: (known[it.id] || {}).sec || it.sec, summary: (known[it.id] || {}).summary || it.summary || '', tag: tagFor(it.title) }));
+        // Curated entries keep their edited title and summary; new uploads use the
+        // channel's title without the " | Rav Avshi" style suffix.
+        const merged = d.items.map(it => {
+          const k = known[it.id];
+          if (k) return { ...it, ...k, summary: k.summary || it.summary || '' };
+          const title = it.title.replace(/\s*[|–-]\s*(Rav Avshi( Weingot)?|Likutei Moharan)\s*$/i, '').trim();
+          return { ...it, title, tag: tagFor(it.title) };
+        });
         __classesCache = merged; setList(merged); setSource('live');
       })
       .catch(() => {});
