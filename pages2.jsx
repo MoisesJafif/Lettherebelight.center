@@ -402,7 +402,7 @@ function SupportPage({ setRoute }) {
               </div>
 
               <div className="mt-6 text-center font-mono text-[10px] tracking-[0.25em] uppercase text-[rgba(244,237,225,0.4)]">
-                501(c)(3) compatible · Tax deductible (US/UK/IL) · Secure payment
+                Monthly or one-time · Secure card payments by Stripe
               </div>
             </div>
           </Reveal>
